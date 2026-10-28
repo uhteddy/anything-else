@@ -1,7 +1,7 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
-import tailwindCanonicalClasses from 'eslint-plugin-tailwind-canonical-classes';
+import tailwindCanonicalClasses from "eslint-plugin-tailwind-canonical-classes";
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -11,7 +11,12 @@ const eslintConfig = defineConfig([
       "tailwind-canonical-classes": tailwindCanonicalClasses,
     },
     rules: {
-      "tailwind-canonical-classes/enforce-canonical": "warn",
+      "tailwind-canonical-classes/tailwind-canonical-classes": [
+        "warn",
+        {
+          cssPath: "./app/globals.css",
+        },
+      ],
     },
   },
   // Override default ignores of eslint-config-next.
