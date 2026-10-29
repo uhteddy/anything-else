@@ -15,6 +15,13 @@
       "when": 1793288668018,
       "tag": "0001_instructor-pg-populate-func",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793306587602,
+      "tag": "0002_strange_catseye",
+      "breakpoints": true
     }
   ]
 }

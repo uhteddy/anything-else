@@ -44,7 +44,7 @@ export const questionSet = pgTable('question_set', {
 
 export const questions = pgTable('questions', {
   id: uuid('id').defaultRandom().primaryKey(),
-  question_set_id: uuid('id').references(() => questionSet.id, { onDelete: 'cascade' }),
+  question_set_id: uuid('question_set_id').references(() => questionSet.id, { onDelete: 'cascade' }),
   question: text().notNull(),
   correct_answer: text().notNull(),
   position: integer().notNull()
