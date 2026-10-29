@@ -1,5 +1,5 @@
 {
-  "id": "4e7333a3-a891-4994-aae3-dc5cee128460",
+  "id": "ef20cf55-a0d0-4763-986d-93dba9c7e3c4",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -55,15 +55,130 @@
           "to": [
             "authenticated"
           ],
-          "using": "\"instructors\".\"id\" = (select auth.uid())",
-          "withCheck": "\"instructors\".\"id\" = (select auth.uid())"
+          "using": "\"instructors\".\"id\" = (select auth.uid())"
         }
       },
       "checkConstraints": {},
       "isRLSEnabled": false
+    },
+    "public.question_set": {
+      "name": "question_set",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "question_set_id_instructors_id_fk": {
+          "name": "question_set_id_instructors_id_fk",
+          "tableFrom": "question_set",
+          "tableTo": "instructors",
+          "columnsFrom": [
+            "id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.questions": {
+      "name": "questions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "question": {
+          "name": "question",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "correct_answer": {
+          "name": "correct_answer",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "position": {
+          "name": "position",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "questions_id_question_set_id_fk": {
+          "name": "questions_id_question_set_id_fk",
+          "tableFrom": "questions",
+          "tableTo": "question_set",
+          "columnsFrom": [
+            "id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "question_set_position_unique": {
+          "name": "question_set_position_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "position"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "question_position_nonnegative": {
+          "name": "question_position_nonnegative",
+          "value": "\"questions\".\"position\" >= 0"
+        }
+      },
+      "isRLSEnabled": false
     }
   },
-  "enums": {},
+  "enums": {
+    "public.gameState": {
+      "name": "gameState",
+      "schema": "public",
+      "values": [
+        "LOBBY",
+        "QUESTION_ACTIVE",
+        "QUESTION_ENDED",
+        "LEADERBOARD",
+        "FINISHED"
+      ]
+    }
+  },
   "schemas": {},
   "sequences": {},
   "roles": {},

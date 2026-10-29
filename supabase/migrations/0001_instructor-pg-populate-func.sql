@@ -1,4 +1,4 @@
--- Custom Drizzle Migration: Automatically populate `public.instructors` on signup
+-- -- Custom Drizzle Migration: Automatically populate `public.instructors` on signup
 --
 -- Whenever a user signs up via Supabase Auth (creating a row in `auth.users`),
 -- this function + trigger automatically inserts a matching row into `public.instructors`.

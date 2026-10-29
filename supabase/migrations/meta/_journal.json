@@ -5,15 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1793246394876,
-      "tag": "0000_init_instructors",
+      "when": 1793288550315,
+      "tag": "0000_silky_caretaker",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1793246396379,
-      "tag": "0001_auto_create_instructor_trigger",
+      "when": 1793288668018,
+      "tag": "0001_instructor-pg-populate-func",
       "breakpoints": true
     }
   ]
