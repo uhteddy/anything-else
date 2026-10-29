@@ -11,8 +11,8 @@
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push",
+    "db:migrate": "supabase db push --local --yes",
+    "db:push": "supabase db push --local --yes",
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {

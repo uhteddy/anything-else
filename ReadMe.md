@@ -33,7 +33,7 @@ Everything is defined as code—no clicking around in the Supabase UI required.
 - **[`db/schema.ts`](./db/schema.ts)** — **Single source of truth for your database schema.** Define all tables, columns, and relations here in TypeScript.
 - **[`db/index.ts`](./db/index.ts)** — **Drizzle ORM client.** Import `db` in Server Components, Server Actions, or API routes to run type-safe SQL queries.
 - **[`lib/supabase.ts`](./lib/supabase.ts)** — **Supabase client.** Use this for Supabase Auth, Realtime subscriptions, and Storage.
-- **[`drizzle.config.ts`](./drizzle.config.ts)** — Tells Drizzle to read `db/schema.ts` and output SQL migration files directly into `supabase/migrations/`.
+- **[`drizzle.config.ts`](./drizzle.config.ts)** — Tells Drizzle to read `db/schema.ts` and generate SQL migration files directly into `supabase/migrations/`. Drizzle does not apply migrations.
 - **[`supabase/config.toml`](./supabase/config.toml)** — Local Supabase configuration as code (ports, auth providers, storage settings).
 
 ---
@@ -45,7 +45,19 @@ Everything is defined as code—no clicking around in the Supabase UI required.
 | `npm run db:start` | Starts the local Supabase Docker containers |
 | `npm run db:stop` | Stops the local Supabase Docker containers |
 | `npm run db:generate` | Generates a new SQL migration in `supabase/migrations/` from changes in `db/schema.ts` |
-| `npm run db:migrate` | Applies pending Drizzle migrations to the database |
-| `npm run db:push` | Pushes `db/schema.ts` changes directly to local Postgres (great for fast prototyping) |
+| `npm run db:migrate` | Applies pending Supabase migrations to the local database |
+| `npm run db:push` | Alias for applying pending Supabase migrations locally |
 | `npm run db:reset` | Wipes the local database and re-runs all migrations in `supabase/migrations/` from scratch |
 | `npm run db:studio` | Opens Drizzle Studio to inspect/edit local database rows |
+
+### Migration workflow
+
+1. Edit `db/schema.ts`.
+2. Run `npm run db:generate` to create a SQL migration in
+   `supabase/migrations/`.
+3. Run `npm run db:migrate` to apply pending migrations through Supabase.
+4. Run `npm run db:reset` when you need a clean local database.
+
+Do not run `drizzle-kit migrate` or `drizzle-kit push`. Those commands use
+Drizzle's separate migration state and can try to apply SQL that Supabase has
+already recorded in its migration history.

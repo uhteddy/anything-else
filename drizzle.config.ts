@@ -6,9 +6,8 @@ import { defineConfig } from 'drizzle-kit';
  * This tells Drizzle where our TypeScript schema lives (`./db/schema.ts`)
  * and outputs generated SQL migrations directly into `./supabase/migrations`.
  *
- * Because it outputs to `./supabase/migrations`, whenever someone runs
- * `npm run db:reset` or starts local Supabase, Supabase automatically
- * picks up and runs the SQL migrations Drizzle generated.
+ * Drizzle Kit is used only to generate SQL. Supabase is the sole migration
+ * runner for local and hosted databases, using the files in this directory.
  */
 export default defineConfig({
   schema: './db/schema.ts',

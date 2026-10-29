@@ -9,8 +9,8 @@ import { authenticatedRole, authUid, authUsers } from 'drizzle-orm/supabase';
  *
  * Workflow when you edit this file:
  *   1. `npm run db:generate` -> Generates a SQL migration file in `supabase/migrations/`
- *   2. `npm run db:migrate`  -> Applies migrations to your local database
- *      (or `npm run db:push` to push changes directly while prototyping)
+ *   2. `npm run db:migrate`  -> Applies pending Supabase migrations locally
+ *      (or `npm run db:push` as an alias)
  */
 
 
