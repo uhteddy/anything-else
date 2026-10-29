@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1793246394876,
+      "tag": "0000_init_instructors",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793246396379,
+      "tag": "0001_auto_create_instructor_trigger",
+      "breakpoints": true
+    }
+  ]
+}
