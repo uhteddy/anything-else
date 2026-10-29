@@ -7,16 +7,20 @@ Everything is defined as code—no clicking around in the Supabase UI required.
 ## Quick Start (Local Development)
 
 1. **Make sure Docker is running** (Docker Desktop or OrbStack).
-2. **Copy the local environment variables:**
+2. **Install the valid NPM packages**
+    ```bash
+    npm ci
+    ```
+3. **Copy the local environment variables:**
    ```bash
    cp .env.example .env.local
    ```
-3. **Start the local Supabase stack (Database, Auth, Realtime, Storage):**
+4. **Start the local Supabase stack (Database, Auth, Realtime, Storage):**
    ```bash
    npm run db:start
    ```
    *(On first run, this automatically applies all SQL migrations in `supabase/migrations/`).*
-4. **Start the Next.js frontend:**
+5. **Start the Next.js frontend:**
    ```bash
    npm run dev
    ```
