@@ -1,0 +1,44 @@
+name: Database migrations
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: database-migrations-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Database migrations
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out pull request merge ref
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start Supabase
+        run: npx supabase start
+
+      - name: Apply migrations and seed data
+        run: npx supabase db reset --yes
+
+      - name: Stop Supabase
+        if: always()
+        run: npx supabase stop
