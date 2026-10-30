@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Anything Else
 
-## Getting Started
+Next.js + Local Supabase + Drizzle ORM.
 
-First, run the development server:
+Everything is defined as code—no clicking around in the Supabase UI required.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Quick Start (Local Development)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **Make sure Docker is running** (Docker Desktop or OrbStack).
+2. **Install the valid NPM packages**
+    ```bash
+    npm ci
+    ```
+3. **Copy the local environment variables:**
+   ```bash
+   cp .env.example .env.local
+   ```
+4. **Start the local Supabase stack (Database, Auth, Realtime, Storage):**
+   ```bash
+   npm run db:start
+   ```
+   *(On first run, this automatically applies all SQL migrations in `supabase/migrations/`).*
+5. **Start the Next.js frontend:**
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## How the Codebase is Structured
 
-## Learn More
+- **[`db/schema.ts`](./db/schema.ts)** — **Single source of truth for your database schema.** Define all tables, columns, and relations here in TypeScript.
+- **[`db/index.ts`](./db/index.ts)** — **Drizzle ORM client.** Import `db` in Server Components, Server Actions, or API routes to run type-safe SQL queries.
+- **[`lib/supabase.ts`](./lib/supabase.ts)** — **Supabase client.** Use this for Supabase Auth, Realtime subscriptions, and Storage.
+- **[`drizzle.config.ts`](./drizzle.config.ts)** — Tells Drizzle to read `db/schema.ts` and generate SQL migration files directly into `supabase/migrations/`. Drizzle does not apply migrations.
+- **[`supabase/config.toml`](./supabase/config.toml)** — Local Supabase configuration as code (ports, auth providers, storage settings).
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Common Database Commands
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Command | What it does |
+| :--- | :--- |
+| `npm run db:start` | Starts the local Supabase Docker containers |
+| `npm run db:stop` | Stops the local Supabase Docker containers |
+| `npm run db:generate` | Generates a new SQL migration in `supabase/migrations/` from changes in `db/schema.ts` |
+| `npm run db:migrate` | Applies pending Supabase migrations to the local database |
+| `npm run db:push` | Alias for applying pending Supabase migrations locally |
+| `npm run db:reset` | Wipes the local database and re-runs all migrations in `supabase/migrations/` from scratch |
+| `npm run db:studio` | Opens Drizzle Studio to inspect/edit local database rows |
 
-## Deploy on Vercel
+### Migration workflow
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Edit `db/schema.ts`.
+2. Run `npm run db:generate` to create a SQL migration in
+   `supabase/migrations/`.
+3. Run `npm run db:migrate` to apply pending migrations through Supabase.
+4. Run `npm run db:reset` when you need a clean local database.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Do not run `drizzle-kit migrate` or `drizzle-kit push`. Those commands use
+Drizzle's separate migration state and can try to apply SQL that Supabase has
+already recorded in its migration history.
