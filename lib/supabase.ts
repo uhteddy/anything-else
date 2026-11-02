@@ -7,13 +7,12 @@ import { createClient } from '@supabase/supabase-js';
  * this client handles Supabase features like Authentication, Realtime subscriptions,
  * and Storage buckets.
  *
- * Defaults to the standard local Supabase URL and demo anon key so local dev
- * works out of the box even before copying `.env.example`.
+ * Uses the local Supabase URL and Publishable Key (`sb_publishable_...`) from `.env.local`.
  */
 const supabaseUrl =
   process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://127.0.0.1:54321';
 
-const supabaseAnonKey =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabasePublishableKey =
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || '';
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabasePublishableKey);

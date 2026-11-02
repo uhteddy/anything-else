@@ -7,11 +7,11 @@ Everything is defined as code—no clicking around in the Supabase UI required.
 ## Quick Start (Local Development)
 
 1. **Make sure Docker is running** (Docker Desktop or OrbStack).
-2. **Install the valid NPM packages**
-    ```bash
-    npm ci
-    ```
-3. **Copy the local environment variables:**
+2. **Install the valid NPM packages:**
+   ```bash
+   npm ci
+   ```
+3. **Copy the example environment file:**
    ```bash
    cp .env.example .env.local
    ```
@@ -20,7 +20,17 @@ Everything is defined as code—no clicking around in the Supabase UI required.
    npm run db:start
    ```
    *(On first run, this automatically applies all SQL migrations in `supabase/migrations/`).*
-5. **Start the Next.js frontend:**
+5. **Populate your environment variables in `.env.local`:**
+    Environment variables are not populated automatically. Copy the values printed in the terminal by `npm run db:start` (or run `npx supabase status` at any time to view them again) into `.env.local`:
+
+   | `.env.local` Variable | Supabase CLI Output Field | Local Default Example |
+   | :--- | :--- | :--- |
+   | `DATABASE_URL` | **Database → URL** | `postgresql://postgres:postgres@127.0.0.1:54322/postgres` |
+   | `NEXT_PUBLIC_SUPABASE_URL` | **APIs → Project URL** | `http://127.0.0.1:54321` |
+   | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | **Authentication Keys → Publishable** | `sb_publishable_...` |
+   | `NEXT_PRIVATE_SUPABASE_SECRET_KEY` | **Authentication Keys → Secret** | `sb_secret_...` |
+
+6. **Start the Next.js frontend:**
    ```bash
    npm run dev
    ```
