@@ -26,7 +26,7 @@ export async function proxy(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const { pathname } = request.nextUrl;
 
-  if (!data?.claims && PROTECTED_PREFIXES.some((p) => pathname.startsWith(p))) {
+if (!data?.claims && PROTECTED_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {
     const loginUrl = request.nextUrl.clone();
 
     // CHANGE THIS LATER WHEN PAGES EXIST
