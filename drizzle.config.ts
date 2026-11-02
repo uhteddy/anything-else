@@ -3,7 +3,7 @@ import { defineConfig } from 'drizzle-kit';
 for (const file of ['.env.local', '.env']) {
   try {
     process.loadEnvFile(file);
-  } catch {}
+  } catch { /* Optional local env files may be absent. */ }
 }
 
 if (!process.env.DATABASE_URL) {
