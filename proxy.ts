@@ -28,6 +28,8 @@ export async function proxy(request: NextRequest) {
 
   if (!data?.claims && PROTECTED_PREFIXES.some((p) => pathname.startsWith(p))) {
     const loginUrl = request.nextUrl.clone();
+
+    // CHANGE THIS LATER WHEN PAGES EXIST
     loginUrl.pathname = '/login';
     loginUrl.searchParams.set('next', pathname);
     return NextResponse.redirect(loginUrl);
