@@ -101,7 +101,7 @@ describe('Supabase Auth & Next.js 16 Proxy', () => {
     const visible = await db.transaction(async (tx) => {
       await tx.execute(sql`SET LOCAL ROLE authenticated`);
       await tx.execute(
-        sql`SELECT set_config('request.jwt.claims', ${JSON.stringify({ sub: idA, role: 'authenticated' })}, true)`
+        sql`SELECT set_config('request.jwt.claim.sub', ${idA}, true)`
       );
       return tx.select().from(instructors);
     });
