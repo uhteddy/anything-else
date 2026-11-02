@@ -32,7 +32,9 @@ if (!data?.claims && PROTECTED_PREFIXES.some((p) => pathname === p || pathname.s
     // CHANGE THIS LATER WHEN PAGES EXIST
     loginUrl.pathname = '/login';
     loginUrl.searchParams.set('next', pathname);
-    return NextResponse.redirect(loginUrl);
+const redirectResponse = NextResponse.redirect(loginUrl);
+    response.cookies.getAll().forEach((cookie) => redirectResponse.cookies.set(cookie));
+    return redirectResponse;
   }
 
   return response;
