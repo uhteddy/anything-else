@@ -74,7 +74,7 @@ describe('Supabase Auth & Next.js 16 Proxy', () => {
 
     // 3. Sign out clears session cookies & unauthenticated proxy redirects /dashboard
     await signOut();
-    expect((await getClaims()).data).toBeNull();
+    expect((await getClaims()).data?.claims ?? null).toBeNull();
 
     const unauthRes = await proxy(new NextRequest('http://localhost:3000/dashboard?tab=results'));
     expect(getRedirectUrl(unauthRes)).toBe('http://localhost:3000/login?next=%2Fdashboard%3Ftab%3Dresults');
