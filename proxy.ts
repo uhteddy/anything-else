@@ -26,13 +26,14 @@ export async function proxy(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const { pathname } = request.nextUrl;
 
-if (!data?.claims && PROTECTED_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {
+  if (!data?.claims && PROTECTED_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {
     const loginUrl = request.nextUrl.clone();
 
     // CHANGE THIS LATER WHEN PAGES EXIST
     loginUrl.pathname = '/login';
-    loginUrl.searchParams.set('next', pathname);
-const redirectResponse = NextResponse.redirect(loginUrl);
+    loginUrl.search = '';
+    loginUrl.searchParams.set('next', `${pathname}${request.nextUrl.search}`);
+    const redirectResponse = NextResponse.redirect(loginUrl);
     response.cookies.getAll().forEach((cookie) => redirectResponse.cookies.set(cookie));
     return redirectResponse;
   }

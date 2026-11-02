@@ -76,8 +76,8 @@ describe('Supabase Auth & Next.js 16 Proxy', () => {
     await signOut();
     expect((await getClaims()).data).toBeNull();
 
-    const unauthRes = await proxy(new NextRequest('http://localhost:3000/dashboard'));
-    expect(getRedirectUrl(unauthRes)).toBe('http://localhost:3000/login?next=%2Fdashboard');
+    const unauthRes = await proxy(new NextRequest('http://localhost:3000/dashboard?tab=results'));
+    expect(getRedirectUrl(unauthRes)).toBe('http://localhost:3000/login?next=%2Fdashboard%3Ftab%3Dresults');
 
     // 4. Sign in sets SSR cookies, getClaims() & authenticated proxy succeed
     const { error: signInErr } = await signIn(emailA, password);
