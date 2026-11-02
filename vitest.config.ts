@@ -4,7 +4,7 @@ import { defineConfig } from 'vitest/config';
 for (const file of ['.env.local', '.env']) {
   try {
     process.loadEnvFile(file);
-  } catch {}
+  } catch { /* Optional local env files may be absent. */ }
 }
 
 export default defineConfig({
