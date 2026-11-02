@@ -9,7 +9,7 @@ Everything is defined as code—no clicking around in the Supabase UI required.
 1. **Make sure Docker is running** (Docker Desktop or OrbStack).
 2. **Install the valid NPM packages:**
    ```bash
-   npm ci
+   npm install
    ```
 3. **Copy the example environment file:**
    ```bash
