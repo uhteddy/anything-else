@@ -1,6 +1,18 @@
 name: Database tests
 
 on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "db/**"
+      - "supabase/**"
+      - "tests/**"
+      - "lib/**"
+      - "proxy.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/database-tests.yml"
   workflow_dispatch:
 
 permissions:
