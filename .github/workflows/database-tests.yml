@@ -1,18 +1,6 @@
 name: Database tests
 
 on:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "db/**"
-      - "supabase/**"
-      - "tests/**"
-      - "lib/**"
-      - "proxy.ts"
-      - "package.json"
-      - "package-lock.json"
-      - ".github/workflows/database-tests.yml"
   workflow_dispatch:
 
 permissions:
@@ -36,11 +24,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
-        run: npm i
+        run: npm ci --include=optional
 
       - name: Start Supabase
         run: npx supabase start
@@ -49,15 +37,13 @@ jobs:
         run: npx supabase db reset --yes
 
       - name: Export Supabase test environment
-        run: npx supabase status -o env >> "$GITHUB_ENV"
-
-      - name: Map Supabase credentials to application environment
         run: |
+          status="$(npx supabase status -o json)"
           {
-            echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL"
-            echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$PUBLISHABLE_KEY"
-            echo "NEXT_PRIVATE_SUPABASE_SECRET_KEY=$SECRET_KEY"
-            echo "DATABASE_URL=$DB_URL"
+            echo "NEXT_PUBLIC_SUPABASE_URL=$(jq -r '.API_URL' <<< "$status")"
+            echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$(jq -r '.PUBLISHABLE_KEY' <<< "$status")"
+            echo "NEXT_PRIVATE_SUPABASE_SECRET_KEY=$(jq -r '.SECRET_KEY' <<< "$status")"
+            echo "DATABASE_URL=$(jq -r '.DB_URL' <<< "$status")"
           } >> "$GITHUB_ENV"
 
       - name: Run tests
