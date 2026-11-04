@@ -105,6 +105,7 @@ describe('Supabase Auth & Next.js 16 Proxy', () => {
       );
       return tx.select().from(instructors);
     });
+
     expect(visible).toHaveLength(1);
     expect(visible[0].id).toBe(idA);
   });
