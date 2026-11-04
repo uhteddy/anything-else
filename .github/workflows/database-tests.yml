@@ -1,0 +1,68 @@
+name: Database tests
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "db/**"
+      - "supabase/**"
+      - "tests/**"
+      - "lib/**"
+      - "proxy.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/database-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: database-tests-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Supabase integration tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out pull request merge ref
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start Supabase
+        run: npx supabase start
+
+      - name: Apply migrations and seed data
+        run: npx supabase db reset --yes
+
+      - name: Export Supabase test environment
+        run: npx supabase status -o env >> "$GITHUB_ENV"
+
+      - name: Map Supabase credentials to application environment
+        run: |
+          {
+            echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL"
+            echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$PUBLISHABLE_KEY"
+            echo "NEXT_PRIVATE_SUPABASE_SECRET_KEY=$SECRET_KEY"
+            echo "DATABASE_URL=$DB_URL"
+          } >> "$GITHUB_ENV"
+
+      - name: Run tests
+        run: npm test
+
+      - name: Stop Supabase
+        if: always()
+        run: npx supabase stop
