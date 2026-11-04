@@ -1,26 +1,28 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * daisyUI component library.
+ * "light" is the default theme; "dark" is used automatically when the
+ * user's OS prefers a dark color scheme. Override per-subtree with
+ * data-theme="light|dark".
+ */
+@plugin "daisyui" {
+  themes:
+    light --default,
+    dark --prefersdark;
 }
 
+/*
+ * Keep the existing bg-background / text-foreground utilities working by
+ * pointing them at the active daisyUI theme colors.
+ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--color-base-100);
+  --color-foreground: var(--color-base-content);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
