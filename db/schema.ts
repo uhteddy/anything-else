@@ -1,4 +1,4 @@
-import { sql } from 'drizzle-orm';
+import { sql, relations } from 'drizzle-orm';
 import { check, integer, pgEnum, pgPolicy, pgTable, text, timestamp, unique, uuid } from 'drizzle-orm/pg-core';
 import { authenticatedRole, authUid, authUsers } from 'drizzle-orm/supabase';
 
@@ -38,7 +38,7 @@ export const instructors = pgTable(
 
 export const questionSet = pgTable('question_set', {
   id: uuid('id').primaryKey().defaultRandom(),
-  instructor_id: uuid('id').primaryKey().references(() => instructors.id, { onDelete: 'cascade' }),
+  instructor_id: uuid('instructor_id').references(() => instructors.id, { onDelete: 'cascade' }),
   title: text().notNull()
 })
 
@@ -57,3 +57,22 @@ export const questions = pgTable('questions', {
 ])
 
 export const gameStateEnum = pgEnum('gameState', ['LOBBY', 'QUESTION_ACTIVE', 'QUESTION_ENDED', 'LEADERBOARD', 'FINISHED']);
+
+export const instructorRelations = relations(instructors, ({ many }) => ({
+  questionSets: many(questionSet)
+}))
+
+export const questionSetRelations = relations(questionSet, ({ one, many }) => ({
+  instructor: one(instructors, {
+    fields: [questionSet.instructor_id],
+    references: [instructors.id],
+  }),
+  questions: many(questions),
+}));
+
+export const questionRelations = relations(questions, ({ one }) => ({
+  questionSet: one(questionSet, {
+    fields: [questions.question_set_id],
+    references: [questionSet.id],
+  }),
+}));

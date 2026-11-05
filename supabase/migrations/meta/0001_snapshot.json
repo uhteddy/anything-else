@@ -1,6 +1,6 @@
 {
-  "id": "79ef8f41-7c30-4894-924e-2e9bb31fe382",
-  "prevId": "ef20cf55-a0d0-4763-986d-93dba9c7e3c4",
+  "id": "8060feb7-0903-4730-9108-9cefb50aab7a",
+  "prevId": "0500a863-39b7-4ffe-a26d-3bdd68c8bfbf",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -69,7 +69,14 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "instructor_id": {
+          "name": "instructor_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         },
         "title": {
           "name": "title",
@@ -80,11 +87,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "question_set_id_instructors_id_fk": {
-          "name": "question_set_id_instructors_id_fk",
+        "question_set_instructor_id_instructors_id_fk": {
+          "name": "question_set_instructor_id_instructors_id_fk",
           "tableFrom": "question_set",
           "columnsFrom": [
-            "id"
+            "instructor_id"
           ],
           "tableTo": "instructors",
           "columnsTo": [
@@ -106,6 +113,13 @@
       "columns": {
         "id": {
           "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "question_set_id": {
+          "name": "question_set_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
@@ -131,11 +145,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "questions_id_question_set_id_fk": {
-          "name": "questions_id_question_set_id_fk",
+        "questions_question_set_id_question_set_id_fk": {
+          "name": "questions_question_set_id_question_set_id_fk",
           "tableFrom": "questions",
           "columnsFrom": [
-            "id"
+            "question_set_id"
           ],
           "tableTo": "question_set",
           "columnsTo": [
@@ -150,7 +164,7 @@
         "question_set_position_unique": {
           "name": "question_set_position_unique",
           "columns": [
-            "id",
+            "question_set_id",
             "position"
           ],
           "nullsNotDistinct": false
