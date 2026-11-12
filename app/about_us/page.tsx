@@ -13,7 +13,7 @@ export default function AboutUs() {
           img="/file.svg"
           name="Teddy Hartling" 
           role="Tech Lead" 
-          email="Teddy_Hartling@student.uml.edu"
+          email="Theodore_Hartling@student.uml.edu"
           extraInfo={
             <a href="https://github.com/uhteddy" className="">
               <Image
