@@ -82,10 +82,22 @@ export default function AboutUs() {
           />
 
           <AboutUsCard 
-          img="/file.svg"
+          img="/project-files/david_profile_pic.jpg"
           name="David Suy" 
           role="Project Manager" 
-          email="David_Suy@student.uml.edu" />
+          email="David_Suy@student.uml.edu"
+          extraInfo={
+            <a href="https://github.com/DavidSuy" className="">
+              <Image
+                src="/svg/GitHub_Invertocat_Black.svg"
+                alt="GitHub"
+                width="32"
+                height="32"
+                className="dark:invert"
+              />
+            </a>
+          }
+          />
       </div>
     </div>
   );
