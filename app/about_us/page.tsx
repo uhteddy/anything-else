@@ -28,7 +28,7 @@ export default function AboutUs() {
           />
 
           <AboutUsCard 
-          img="/file.svg"
+          img="/webp/IMG_2228.webp"
           name="Cassie Manning" 
           role="Tester (QA)"
           email="Cassandra_Manning@student.uml.edu" 
