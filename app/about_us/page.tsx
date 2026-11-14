@@ -46,7 +46,7 @@ export default function AboutUs() {
           />
 
           <AboutUsCard 
-          img="/file.svg"
+          img="/webp/Samuel.webp"
           name="Samuel Pimentel" 
           role="Docs & UI Lead" 
           email="Samuel_Pimentel@student.uml.edu"
