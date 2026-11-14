@@ -1,7 +1,7 @@
 export default function Game() {
   return (
-    <main>
-      <h1>Game Page</h1>
+    <main className="flex justify-center py-8">
+      <h1 className="text-2xl font-bold">Coming Soon</h1>
     </main>
   );
 }

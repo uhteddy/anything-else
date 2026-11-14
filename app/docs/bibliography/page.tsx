@@ -1,15 +1,177 @@
 export default function Docs() {
   return (
-    <div className="flex flex-col items-center justify-center py-8">
-      <h1 className="text-2xl font-bold">Bibliography</h1>
+    <main className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 text-left">
+      <h1 className="text-center text-2xl font-bold">Bibliography</h1>
+      <p>
+        These are the main frameworks, libraries, and development tools used
+        to build and test Anything Else.
+      </p>
 
-      <p className="w-2xl">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis arcu convallis, malesuada risus ut, placerat orci. Duis ut sagittis lectus. Cras eget tempor libero, placerat sodales metus. Aliquam a scelerisque nulla. Ut rhoncus nunc non sodales suscipit. Phasellus vulputate venenatis est, in luctus odio sagittis a. Morbi ac dolor vitae nibh tincidunt faucibus. Proin maximus, mauris quis tristique aliquam, nulla erat lacinia nulla, tincidunt imperdiet dolor massa vitae quam. Suspendisse mollis sollicitudin ultrices. Etiam vehicula efficitur elementum. Suspendisse potenti. Etiam ut tortor sit amet justo sagittis cursus accumsan in dui.</p>
-      <p className="w-2xl">Suspendisse mattis condimentum augue, molestie ornare orci lobortis placerat. Nulla non ultricies sapien, nec porta mauris. Donec sed diam vel leo varius pellentesque in vitae purus. Praesent vel condimentum velit, vitae lacinia augue. Sed venenatis cursus felis, vel cursus dolor accumsan dictum. Mauris dictum quam tortor, vel volutpat lorem tempus in. Sed non dui eget augue rhoncus lobortis. Nunc nisl neque, varius a tortor at, pharetra tempor justo. Vestibulum fringilla eros id orci luctus ornare. Mauris et nisi odio. Cras quis neque eget risus mollis egestas vel et leo. Maecenas nisl nisi, aliquam in nunc sit amet, varius lacinia diam. Nulla facilisi. Proin varius nunc at neque aliquet, vitae pharetra sem sagittis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Morbi id ex efficitur, vulputate ex sit amet, convallis odio.</p>
-      <p className="w-2xl">Sed dictum libero odio, et mollis quam lobortis ac. Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam quis turpis ac turpis posuere hendrerit sit amet vitae arcu. Morbi ultrices erat quis dolor suscipit facilisis. Cras id interdum enim. Nullam lectus leo, congue a ullamcorper a, scelerisque nec erat. Duis a lectus aliquam, feugiat urna at, viverra lacus. Cras scelerisque quis turpis sed commodo. Integer mi arcu, viverra at rutrum nec, tristique sit amet leo. Nulla aliquet velit eu tincidunt aliquet. Vivamus condimentum ac lacus sed porttitor. Nullam vel orci et mi laoreet sagittis. Ut ac urna quis sem commodo porttitor vel eget dolor. Sed in ultrices ipsum, eget varius neque.</p>
-      <p className="w-2xl">Mauris cursus, nulla ut porttitor porta, diam odio ullamcorper justo, vitae vehicula turpis neque in est. Vestibulum sollicitudin volutpat ex in egestas. Sed ac nulla quis neque viverra consectetur ac ac sem. Praesent porta sodales bibendum. Cras auctor nisl ut nisi facilisis, at iaculis arcu consectetur. Phasellus varius neque placerat purus molestie, sed mattis eros venenatis. Cras feugiat erat magna, quis lobortis quam lobortis bibendum. Morbi nibh tortor, placerat in lorem et, congue vestibulum neque. Curabitur nec volutpat metus, ut commodo magna. Suspendisse ac quam quis massa molestie accumsan sit amet sit amet arcu. Nam vulputate tincidunt ultricies. Mauris vitae odio at enim eleifend tempus. Sed vitae nisl scelerisque, semper sapien ut, ullamcorper lorem. Proin erat turpis, lobortis eu lacus in, scelerisque condimentum eros.</p>
-      <p className="w-2xl">Donec venenatis congue nisl et faucibus. Integer pharetra pulvinar lectus cursus consequat. Phasellus dictum lacinia libero, eu convallis felis feugiat eu. Cras eu tincidunt ante. In urna lectus, efficitur non sapien id, venenatis pulvinar eros. Integer elementum mattis sem ultricies vehicula. Vivamus enim quam, pellentesque et vestibulum et, ullamcorper sit amet ante. In ornare ac nibh ac facilisis. Integer congue massa felis, a auctor lacus gravida eu. In eget nibh eget nisl ornare mattis ut id nunc. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse in dictum nulla, a consequat diam. Suspendisse placerat mattis suscipit.</p>
-      <p className="w-2xl">Praesent id odio urna. Pellentesque sed sem vestibulum elit accumsan lobortis maximus a mauris. Cras cursus, odio nec sodales auctor, ante neque lobortis magna, in eleifend orci dui a odio. Pellentesque suscipit dapibus urna quis sodales. Pellentesque et fringilla arcu. Quisque egestas tellus ex, volutpat varius ante facilisis et. Nullam ultrices sem non tincidunt consequat. Vivamus ultrices justo in eleifend finibus. Duis rhoncus risus sit amet ante bibendum porta. Mauris elementum eros id tortor molestie iaculis. Suspendisse luctus arcu justo, tempus vehicula orci vehicula et.</p>
-      <p className="w-2xl">Praesent blandit quam nulla, sit amet feugiat leo vulputate hendrerit. Vivamus in iaculis neque, id convallis leo. Phasellus fermentum maximus libero at accumsan. Sed pretium tellus nec velit tincidunt scelerisque. Donec massa tellus, mattis vitae commodo non, imperdiet et neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Suspendisse id enim quis ipsum pretium dictum non sed ipsum. Duis commodo fermentum turpis, eget gravida elit pretium nec. Maecenas ut feugiat est.</p>
-    </div>
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold">Application and UI</h2>
+        <ul className="list-disc space-y-2 ps-6">
+          <li>
+            <a href="https://nextjs.org/docs" target="_blank" rel="noreferrer">
+              Next.js documentation
+            </a>{" "}
+            — web framework and application routing.
+          </li>
+          <li>
+            <a href="https://react.dev/learn" target="_blank" rel="noreferrer">
+              React documentation
+            </a>{" "}
+            — library used to build the user interface.
+          </li>
+          <li>
+            <a
+              href="https://www.typescriptlang.org/docs/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              TypeScript documentation
+            </a>{" "}
+            — typed language used throughout the application.
+          </li>
+          <li>
+            <a
+              href="https://tailwindcss.com/docs"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Tailwind CSS documentation
+            </a>{" "}
+            — utility-first styling.
+          </li>
+          <li>
+            <a
+              href="https://daisyui.com/docs/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              daisyUI documentation
+            </a>{" "}
+            — component and theme classes used with Tailwind CSS.
+          </li>
+        </ul>
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold">Backend and Data</h2>
+        <ul className="list-disc space-y-2 ps-6">
+          <li>
+            <a
+              href="https://supabase.com/docs"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Supabase documentation
+            </a>{" "}
+            — backend platform and authentication client.
+          </li>
+          <li>
+            <a
+              href="https://supabase.com/docs/guides/local-development/cli/getting-started"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Supabase CLI documentation
+            </a>{" "}
+            — local services and database migration workflow.
+          </li>
+          <li>
+            <a
+              href="https://www.postgresql.org/docs/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              PostgreSQL documentation
+            </a>{" "}
+            — relational database used by the project.
+          </li>
+          <li>
+            <a
+              href="https://orm.drizzle.team/docs/overview"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Drizzle ORM documentation
+            </a>{" "}
+            — TypeScript database schema and query toolkit.
+          </li>
+          <li>
+            <a
+              href="https://github.com/porsager/postgres"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Postgres.js project
+            </a>{" "}
+            — PostgreSQL client used by Drizzle.
+          </li>
+        </ul>
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold">Development and Testing</h2>
+        <ul className="list-disc space-y-2 ps-6">
+          <li>
+            <a
+              href="https://nodejs.org/docs/latest/api/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Node.js documentation
+            </a>{" "}
+            — JavaScript runtime for development and build scripts.
+          </li>
+          <li>
+            <a
+              href="https://docs.npmjs.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              npm documentation
+            </a>{" "}
+            — package management and project scripts.
+          </li>
+          <li>
+            <a href="https://docs.docker.com/" target="_blank" rel="noreferrer">
+              Docker documentation
+            </a>{" "}
+            — runs the local Supabase services.
+          </li>
+          <li>
+            <a href="https://vitest.dev/guide/" target="_blank" rel="noreferrer">
+              Vitest documentation
+            </a>{" "}
+            — test runner used by the project.
+          </li>
+          <li>
+            <a
+              href="https://eslint.org/docs/latest/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              ESLint documentation
+            </a>{" "}
+            — code linting.
+          </li>
+          <li>
+            <a href="https://git-scm.com/doc" target="_blank" rel="noreferrer">
+              Git documentation
+            </a>{" "}
+            and{" "}
+            <a
+              href="https://docs.github.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub documentation
+            </a>{" "}
+            — source control and repository collaboration.
+          </li>
+        </ul>
+      </section>
+    </main>
   );
 }

@@ -1,15 +1,197 @@
 export default function Docs() {
   return (
-    <div className="flex flex-col items-center justify-center py-8">
-      <h1 className="text-2xl font-bold">Background and Description</h1>
+    <main className="mx-auto flex max-w-4xl flex-col gap-8 px-4 py-8 text-left">
+      <h1 className="text-center text-2xl font-bold">
+        Background and Description
+      </h1>
 
-      <p className="w-2xl">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis arcu convallis, malesuada risus ut, placerat orci. Duis ut sagittis lectus. Cras eget tempor libero, placerat sodales metus. Aliquam a scelerisque nulla. Ut rhoncus nunc non sodales suscipit. Phasellus vulputate venenatis est, in luctus odio sagittis a. Morbi ac dolor vitae nibh tincidunt faucibus. Proin maximus, mauris quis tristique aliquam, nulla erat lacinia nulla, tincidunt imperdiet dolor massa vitae quam. Suspendisse mollis sollicitudin ultrices. Etiam vehicula efficitur elementum. Suspendisse potenti. Etiam ut tortor sit amet justo sagittis cursus accumsan in dui.</p>
-      <p className="w-2xl">Suspendisse mattis condimentum augue, molestie ornare orci lobortis placerat. Nulla non ultricies sapien, nec porta mauris. Donec sed diam vel leo varius pellentesque in vitae purus. Praesent vel condimentum velit, vitae lacinia augue. Sed venenatis cursus felis, vel cursus dolor accumsan dictum. Mauris dictum quam tortor, vel volutpat lorem tempus in. Sed non dui eget augue rhoncus lobortis. Nunc nisl neque, varius a tortor at, pharetra tempor justo. Vestibulum fringilla eros id orci luctus ornare. Mauris et nisi odio. Cras quis neque eget risus mollis egestas vel et leo. Maecenas nisl nisi, aliquam in nunc sit amet, varius lacinia diam. Nulla facilisi. Proin varius nunc at neque aliquet, vitae pharetra sem sagittis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Morbi id ex efficitur, vulputate ex sit amet, convallis odio.</p>
-      <p className="w-2xl">Sed dictum libero odio, et mollis quam lobortis ac. Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam quis turpis ac turpis posuere hendrerit sit amet vitae arcu. Morbi ultrices erat quis dolor suscipit facilisis. Cras id interdum enim. Nullam lectus leo, congue a ullamcorper a, scelerisque nec erat. Duis a lectus aliquam, feugiat urna at, viverra lacus. Cras scelerisque quis turpis sed commodo. Integer mi arcu, viverra at rutrum nec, tristique sit amet leo. Nulla aliquet velit eu tincidunt aliquet. Vivamus condimentum ac lacus sed porttitor. Nullam vel orci et mi laoreet sagittis. Ut ac urna quis sem commodo porttitor vel eget dolor. Sed in ultrices ipsum, eget varius neque.</p>
-      <p className="w-2xl">Mauris cursus, nulla ut porttitor porta, diam odio ullamcorper justo, vitae vehicula turpis neque in est. Vestibulum sollicitudin volutpat ex in egestas. Sed ac nulla quis neque viverra consectetur ac ac sem. Praesent porta sodales bibendum. Cras auctor nisl ut nisi facilisis, at iaculis arcu consectetur. Phasellus varius neque placerat purus molestie, sed mattis eros venenatis. Cras feugiat erat magna, quis lobortis quam lobortis bibendum. Morbi nibh tortor, placerat in lorem et, congue vestibulum neque. Curabitur nec volutpat metus, ut commodo magna. Suspendisse ac quam quis massa molestie accumsan sit amet sit amet arcu. Nam vulputate tincidunt ultricies. Mauris vitae odio at enim eleifend tempus. Sed vitae nisl scelerisque, semper sapien ut, ullamcorper lorem. Proin erat turpis, lobortis eu lacus in, scelerisque condimentum eros.</p>
-      <p className="w-2xl">Donec venenatis congue nisl et faucibus. Integer pharetra pulvinar lectus cursus consequat. Phasellus dictum lacinia libero, eu convallis felis feugiat eu. Cras eu tincidunt ante. In urna lectus, efficitur non sapien id, venenatis pulvinar eros. Integer elementum mattis sem ultricies vehicula. Vivamus enim quam, pellentesque et vestibulum et, ullamcorper sit amet ante. In ornare ac nibh ac facilisis. Integer congue massa felis, a auctor lacus gravida eu. In eget nibh eget nisl ornare mattis ut id nunc. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse in dictum nulla, a consequat diam. Suspendisse placerat mattis suscipit.</p>
-      <p className="w-2xl">Praesent id odio urna. Pellentesque sed sem vestibulum elit accumsan lobortis maximus a mauris. Cras cursus, odio nec sodales auctor, ante neque lobortis magna, in eleifend orci dui a odio. Pellentesque suscipit dapibus urna quis sodales. Pellentesque et fringilla arcu. Quisque egestas tellus ex, volutpat varius ante facilisis et. Nullam ultrices sem non tincidunt consequat. Vivamus ultrices justo in eleifend finibus. Duis rhoncus risus sit amet ante bibendum porta. Mauris elementum eros id tortor molestie iaculis. Suspendisse luctus arcu justo, tempus vehicula orci vehicula et.</p>
-      <p className="w-2xl">Praesent blandit quam nulla, sit amet feugiat leo vulputate hendrerit. Vivamus in iaculis neque, id convallis leo. Phasellus fermentum maximus libero at accumsan. Sed pretium tellus nec velit tincidunt scelerisque. Donec massa tellus, mattis vitae commodo non, imperdiet et neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Suspendisse id enim quis ipsum pretium dictum non sed ipsum. Duis commodo fermentum turpis, eget gravida elit pretium nec. Maecenas ut feugiat est.</p>
-    </div>
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold">Overview</h2>
+        <p>
+          Anything Else is a browser-based game for live, group review sessions.
+          Instructors prepare question sets and host games; students join from a
+          phone or laptop with a game PIN, without creating an account. Students
+          are assigned to color-coded groups and work together to submit
+          open-response answers.
+        </p>
+        <p>
+          The grading service Jev (Typesafe AI) compares each group&apos;s
+          response with the instructor&apos;s reference answer. Groups can earn
+          full or partial credit based on correctness and completeness, with
+          faster answers earning more points. A leaderboard keeps the session
+          engaging, while written responses give instructors insight into how
+          students are thinking.
+        </p>
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold">Background and Motivation</h2>
+        <p>
+          Live quiz tools such as Kahoot! make classroom review engaging with
+          timed questions, individual competition, and leaderboards. However,
+          multiple-choice questions mainly measure recognition, allow
+          guessing, and are not well suited to questions asking students to
+          explain why or how. Individual competition can also leave students
+          who fall behind disengaged, without encouraging peer discussion.
+        </p>
+        <p>
+          Open-ended answers are difficult to use in a fast-paced classroom
+          game because manually grading many written responses takes too long.
+          Recent language models make it practical to compare short answers
+          with instructor-provided references in seconds, enabling a live game
+          built around both written reasoning and teamwork.
+        </p>
+        <ul className="list-disc space-y-2 ps-6">
+          <li>
+            <strong>Open responses with partial credit:</strong> Students
+            explain ideas in their own words. Jev evaluates correctness and
+            completeness, so a valid but incomplete answer can receive partial
+            credit rather than being marked simply right or wrong.
+          </li>
+          <li>
+            <strong>Collaborative play:</strong> Students are randomly grouped
+            and submit one agreed-upon answer per group. This encourages
+            discussion and gives students a chance to learn from one another.
+          </li>
+        </ul>
+        <p>
+          The game retains the time pressure, speed bonuses, and leaderboard of
+          familiar quiz games, while giving instructors written answers and
+          grading results to review after play.
+        </p>
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold">How It Works</h2>
+        <ol className="list-decimal space-y-2 ps-6">
+          <li>
+            <strong>Prepare:</strong> The instructor creates a question set.
+            Each question can include text or an image, a reference answer, and
+            a time limit.
+          </li>
+          <li>
+            <strong>Host:</strong> The instructor selects a question set and
+            group size. The game opens a lobby with a PIN.
+          </li>
+          <li>
+            <strong>Join:</strong> Students enter the PIN and choose a username
+            from their own devices; no student account or app is required.
+          </li>
+          <li>
+            <strong>Group:</strong> Students are randomly sorted into
+            color-coded groups, making it easy to find groupmates.
+          </li>
+          <li>
+            <strong>Play:</strong> Each question and its countdown appear on
+            the projected screen and student devices. Any group member can
+            submit the group&apos;s answer, and the first submission counts.
+          </li>
+          <li>
+            <strong>Grade:</strong> Jev compares each response with the
+            reference answer. Points reflect correctness, completeness, and
+            response speed.
+          </li>
+          <li>
+            <strong>Review:</strong> The class sees the reference answer,
+            group scores, and leaderboard. The instructor can review answers
+            and results after the game.
+          </li>
+        </ol>
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold">Goals</h2>
+        <ul className="list-disc space-y-2 ps-6">
+          <li>Support live review with open-ended questions and written answers.</li>
+          <li>Grade quickly enough for live play, including partial credit.</li>
+          <li>Encourage collaboration through randomly assigned groups.</li>
+          <li>Keep sessions engaging with timed questions, scoring, and a leaderboard.</li>
+          <li>Make joining easy from a modern phone or laptop browser.</li>
+          <li>Give instructors results that reveal student reasoning and misconceptions.</li>
+        </ul>
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold">Stakeholders and Users</h2>
+        <ul className="list-disc space-y-2 ps-6">
+          <li>
+            <strong>Instructors</strong> create question sets, host games, and
+            review results. They need quick setup, fair grading, and control
+            over the session.
+          </li>
+          <li>
+            <strong>Students</strong> join on their devices and play in groups.
+            They need a simple joining flow, clear screens, and understandable
+            scoring.
+          </li>
+          <li>
+            <strong>Jev (Typesafe AI)</strong> provides automated answer
+            grading; the game depends on its availability, speed, and
+            consistency.
+          </li>
+          <li>
+            <strong>The development team</strong> builds and maintains the
+            project during the COMP 4110 semester.
+          </li>
+        </ul>
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold">Project Scope</h2>
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="space-y-2">
+            <h3 className="font-semibold">In scope</h3>
+            <ul className="list-disc space-y-1 ps-6">
+              <li>Instructor accounts and editable question sets, including image prompts</li>
+              <li>PIN-based live games without student accounts</li>
+              <li>Random, color-based groups</li>
+              <li>Timed open-response questions</li>
+              <li>AI grading with partial credit, speed scoring, and leaderboards</li>
+              <li>Post-game answer and result review</li>
+            </ul>
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-semibold">Out of scope</h3>
+            <ul className="list-disc space-y-1 ps-6">
+              <li>Multiple-choice or other question types</li>
+              <li>Self-paced or homework games</li>
+              <li>Student accounts or progress tracking across games</li>
+              <li>Learning management system or gradebook integrations</li>
+              <li>Native mobile apps</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold">Assumptions and Risks</h2>
+        <ul className="list-disc space-y-2 ps-6">
+          <li>
+            <strong>Grading accuracy:</strong> Jev may misjudge unusual but
+            valid answers, and results depend on clear reference answers.
+            Instructors can override grades and review every response.
+          </li>
+          <li>
+            <strong>Service availability:</strong> Slow or unavailable AI
+            grading can delay play; instructors can grade manually if Jev does
+            not respond in time.
+          </li>
+          <li>
+            <strong>Group participation:</strong> One student could dominate a
+            group&apos;s answer, so the collaborative format should be
+            evaluated in practice.
+          </li>
+          <li>
+            <strong>Class size:</strong> The number of available group colors
+            limits the number of groups; larger classes may need larger groups.
+          </li>
+          <li>
+            <strong>Device access:</strong> Students are expected to have a
+            phone or laptop, though a group can still participate if some
+            members do not have a device.
+          </li>
+        </ul>
+      </section>
+    </main>
   );
 }
