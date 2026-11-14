@@ -1,24 +1,23 @@
 export default function Docs() {
   return (
-    <main className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 text-left">
+    <main className="flex flex-col gap-4 py-8 text-left">
       <h1 className="text-center text-2xl font-bold">Bibliography</h1>
-      <p>
+      <p className="text-center">
         These are the main frameworks, libraries, and development tools used
         to build and test Anything Else.
       </p>
 
-      <section className="space-y-3">
         <h2 className="text-xl font-semibold">Application and UI</h2>
         <ul className="list-disc space-y-2 ps-6">
           <li>
-            <a href="https://nextjs.org/docs" target="_blank" rel="noreferrer">
-              Next.js documentation
+            <a href="https://nextjs.org/docs" target="_blank" rel="noreferrer" className="text-blue-500 underline">
+              Next.js Docs
             </a>{" "}
             — web framework and application routing.
           </li>
           <li>
-            <a href="https://react.dev/learn" target="_blank" rel="noreferrer">
-              React documentation
+            <a href="https://react.dev/learn" target="_blank" rel="noreferrer" className="text-blue-500 underline">
+              React Quick Start
             </a>{" "}
             — library used to build the user interface.
           </li>
@@ -27,8 +26,9 @@ export default function Docs() {
               href="https://www.typescriptlang.org/docs/"
               target="_blank"
               rel="noreferrer"
+              className="text-blue-500 underline"
             >
-              TypeScript documentation
+              TypeScript Documentation
             </a>{" "}
             — typed language used throughout the application.
           </li>
@@ -37,25 +37,24 @@ export default function Docs() {
               href="https://tailwindcss.com/docs"
               target="_blank"
               rel="noreferrer"
+              className="text-blue-500 underline"
             >
-              Tailwind CSS documentation
+              Get Started with Tailwind CSS
             </a>{" "}
             — utility-first styling.
           </li>
           <li>
             <a
-              href="https://daisyui.com/docs/"
+              href="https://daisyui.com/docs/use"
               target="_blank"
               rel="noreferrer"
+              className="text-blue-500 underline"
             >
-              daisyUI documentation
+              Using daisyUI
             </a>{" "}
             — component and theme classes used with Tailwind CSS.
           </li>
         </ul>
-      </section>
-
-      <section className="space-y-3">
         <h2 className="text-xl font-semibold">Backend and Data</h2>
         <ul className="list-disc space-y-2 ps-6">
           <li>
@@ -63,8 +62,9 @@ export default function Docs() {
               href="https://supabase.com/docs"
               target="_blank"
               rel="noreferrer"
+              className="text-blue-500 underline"
             >
-              Supabase documentation
+              Supabase Documentation
             </a>{" "}
             — backend platform and authentication client.
           </li>
@@ -73,8 +73,9 @@ export default function Docs() {
               href="https://supabase.com/docs/guides/local-development/cli/getting-started"
               target="_blank"
               rel="noreferrer"
+              className="text-blue-500 underline"
             >
-              Supabase CLI documentation
+              Supabase CLI Quickstart
             </a>{" "}
             — local services and database migration workflow.
           </li>
@@ -83,18 +84,20 @@ export default function Docs() {
               href="https://www.postgresql.org/docs/"
               target="_blank"
               rel="noreferrer"
+              className="text-blue-500 underline"
             >
-              PostgreSQL documentation
+              PostgreSQL Documentation
             </a>{" "}
             — relational database used by the project.
           </li>
           <li>
             <a
-              href="https://orm.drizzle.team/docs/overview"
+              href="https://orm.drizzle.team/docs/get-started"
               target="_blank"
               rel="noreferrer"
+              className="text-blue-500 underline"
             >
-              Drizzle ORM documentation
+              Get Started with Drizzle
             </a>{" "}
             — TypeScript database schema and query toolkit.
           </li>
@@ -103,15 +106,13 @@ export default function Docs() {
               href="https://github.com/porsager/postgres"
               target="_blank"
               rel="noreferrer"
+              className="text-blue-500 underline"
             >
-              Postgres.js project
+              Postgres.js GitHub Repository
             </a>{" "}
             — PostgreSQL client used by Drizzle.
           </li>
         </ul>
-      </section>
-
-      <section className="space-y-3">
         <h2 className="text-xl font-semibold">Development and Testing</h2>
         <ul className="list-disc space-y-2 ps-6">
           <li>
@@ -119,8 +120,9 @@ export default function Docs() {
               href="https://nodejs.org/docs/latest/api/"
               target="_blank"
               rel="noreferrer"
+              className="text-blue-500 underline"
             >
-              Node.js documentation
+              Node.js Documentation
             </a>{" "}
             — JavaScript runtime for development and build scripts.
           </li>
@@ -129,20 +131,21 @@ export default function Docs() {
               href="https://docs.npmjs.com/"
               target="_blank"
               rel="noreferrer"
+              className="text-blue-500 underline"
             >
-              npm documentation
+              npm Docs
             </a>{" "}
             — package management and project scripts.
           </li>
           <li>
-            <a href="https://docs.docker.com/" target="_blank" rel="noreferrer">
-              Docker documentation
+            <a href="https://docs.docker.com/" target="_blank" rel="noreferrer" className="text-blue-500 underline">
+              Docker Docs
             </a>{" "}
             — runs the local Supabase services.
           </li>
           <li>
-            <a href="https://vitest.dev/guide/" target="_blank" rel="noreferrer">
-              Vitest documentation
+            <a href="https://vitest.dev/guide/" target="_blank" rel="noreferrer" className="text-blue-500 underline">
+              Vitest Getting Started
             </a>{" "}
             — test runner used by the project.
           </li>
@@ -151,27 +154,28 @@ export default function Docs() {
               href="https://eslint.org/docs/latest/"
               target="_blank"
               rel="noreferrer"
+              className="text-blue-500 underline"
             >
-              ESLint documentation
+              ESLint Documentation
             </a>{" "}
             — code linting.
           </li>
           <li>
-            <a href="https://git-scm.com/doc" target="_blank" rel="noreferrer">
-              Git documentation
+            <a href="https://git-scm.com/doc" target="_blank" rel="noreferrer" className="text-blue-500 underline">
+              Git Reference Page
             </a>{" "}
             and{" "}
             <a
               href="https://docs.github.com/"
               target="_blank"
               rel="noreferrer"
+              className="text-blue-500 underline"
             >
-              GitHub documentation
+              GitHub Docs
             </a>{" "}
             — source control and repository collaboration.
           </li>
         </ul>
-      </section>
     </main>
   );
 }
