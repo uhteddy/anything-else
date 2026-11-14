@@ -64,7 +64,7 @@ export default function AboutUs() {
         />
 
           <AboutUsCard 
-          img="/file.svg"
+          img="/webp/seheng.webp"
           name="Senghak Heng" 
           role="Code Reviewer" 
           email="Senghak_Heng@student.uml.edu"
