@@ -12,24 +12,24 @@ type DrawerSideBarProps = {
 
 // DRAWER_PROPS defines each tab and nested tab for drawer sidebar.
 const DRAWER_PROPS: DrawerSideBarProps[] = [
-    { string: "Overview", link: "/docs" },
-    { string: "Background and Description", link: "/docs/background_and_description" },
-    { string: "Assignments", link: "/docs/assignments", 
+    { string: "Overview", link: "/project/docs" },
+    { string: "Background and Description", link: "/project/docs/background_and_description" },
+    { string: "Assignments", link: "/project/docs/assignments",
         children: [
-            { string: "Requirements", link: "/docs/assignments/requirements" },
-            { string: "Use Case Diagrams", link: "/docs/assignments/use_case" },
-            { string: "Class Diagrams", link: "/docs/assignments/class" },
-            { string: "Sequence Diagrams", link: "/docs/assignments/sequence" },
-            { string: "SRS v1", link: "/docs/assignments/srs_v1" }
+            { string: "Requirements", link: "/project/docs/assignments/requirements" },
+            { string: "Use Case Diagrams", link: "/project/docs/assignments/use_case" },
+            { string: "Class Diagrams", link: "/project/docs/assignments/class" },
+            { string: "Sequence Diagrams", link: "/project/docs/assignments/sequence" },
+            { string: "SRS v1", link: "/project/docs/assignments/srs_v1" }
         ]
     },
-    { string: "Presentation", link: "/docs/presentation",
+    { string: "Presentation", link: "/project/docs/presentation",
         children: [
-            { string: "Presentation Slides", link: "/docs/presentation/slides" },
-            { string: "Presentation Notes", link: "/docs/presentation/notes"}
+            { string: "Presentation Slides", link: "/project/docs/presentation/slides" },
+            { string: "Presentation Notes", link: "/project/docs/presentation/notes"}
         ]
      },
-    { string: "Bibliography", link: "/docs/bibliography" }
+    { string: "Bibliography", link: "/project/docs/bibliography" }
 ];
 
 // Checks whether or not a link is active based on the pathname. Returns true if the link is active, returns false if not.
