@@ -25,7 +25,7 @@ export default function WaitingLobby({ searchParams }: { searchParams: SearchPar
         <LobbyDetails searchParams={searchParams} />
       </Suspense>
 
-      <Link href="/game/join" className="btn btn-ghost">
+      <Link href="/join" className="btn btn-ghost">
         ← Leave lobby
       </Link>
     </main>

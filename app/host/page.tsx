@@ -12,10 +12,10 @@ export default function HostGame() {
       </section>
 
       <div className="flex flex-wrap justify-center gap-3">
-        <Link href="/game/host/create" className="btn btn-secondary">
+        <Link href="/host/create" className="btn btn-secondary">
           + Create Quiz
         </Link>
-        <Link href="/game" className="btn btn-ghost">
+        <Link href="/" className="btn btn-ghost">
           ← Back to Play Now
         </Link>
       </div>
@@ -28,7 +28,7 @@ export default function HostGame() {
               <h2 className="card-title">{quiz.title}</h2>
               <p className="opacity-70">{quiz.description}</p>
               <div className="card-actions mt-2 justify-end">
-                <Link href="/game/host/start" className="btn btn-primary">
+                <Link href="/host/start" className="btn btn-primary">
                   Start Game
                 </Link>
               </div>

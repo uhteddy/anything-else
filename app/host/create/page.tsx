@@ -7,7 +7,7 @@ export default function CreateQuiz() {
       <span className="badge badge-outline">Placeholder</span>
       <h1 className="text-3xl font-bold">Create Quiz</h1>
       <p className="opacity-70">Coming soon.</p>
-      <Link href="/game/host" className="btn btn-ghost">
+      <Link href="/host" className="btn btn-ghost">
         ← Back to Host a Game
       </Link>
     </main>

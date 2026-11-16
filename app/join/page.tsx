@@ -21,7 +21,7 @@ export default function JoinGame() {
     if (!name) next.nickname = "Please enter a nickname.";
     setErrors(next);
     if (next.pin || next.nickname) return;
-    router.push(`/game/join/lobby?${new URLSearchParams({ pin, nickname: name })}`);
+    router.push(`/join/lobby?${new URLSearchParams({ pin, nickname: name })}`);
   }
 
   return (
@@ -84,7 +84,7 @@ export default function JoinGame() {
           <button type="submit" className="btn btn-lg btn-primary">
             Join Game
           </button>
-          <Link href="/game" className="btn btn-ghost">
+          <Link href="/" className="btn btn-ghost">
             ← Back to Play Now
           </Link>
         </div>
