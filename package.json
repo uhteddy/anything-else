@@ -17,6 +17,8 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@dicebear/core": "^11.0.0-rc.3",
+    "@dicebear/styles": "^11.0.0-rc.3",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.118.0",
     "drizzle-orm": "^0.45.4",
