@@ -15,7 +15,7 @@ type NavbarProps = {
 const NAV_PROPS: NavbarProps[] = [
     { string: "Home", link: "/project" },
     { string: "Documentation", link: "/project/docs" },
-    { string: "Play Now", link: "/project/game" },
+    { string: "Play Now", link: "/" },
     { string: "About Us", link: "/project/about_us" }
 ];
 
