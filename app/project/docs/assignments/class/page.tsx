@@ -1,18 +1,22 @@
-import Image from "next/image";
+import ArcadeFigureCard from "@/lib/components/ArcadeFigureCard";
+import ArcadePageHeader from "@/lib/components/ArcadePageHeader";
 
 export default function Docs() {
   return (
-    <div className="flex flex-col items-center justify-center gap-6 px-4 py-8">
-      <h1 className="text-2xl font-bold">Class Diagram</h1>
-      <figure className="w-full max-w-6xl">
-        <Image
-          src="/project-files/class_diagram.png"
-          alt="Class diagram for the game system"
-          width={2560}
-          height={1910}
-          className="h-auto w-full"
-        />
-      </figure>
+    <div className="flex flex-col gap-8">
+      <ArcadePageHeader
+        title="Class Diagram"
+        description="Object-oriented domain model and relationships for the quiz system."
+      />
+
+      <ArcadeFigureCard
+        title="Domain Class Model"
+        src="/project-files/class_diagram.png"
+        alt="Class diagram for the game system"
+        width={2560}
+        height={1910}
+        accentColor="bg-accent"
+      />
     </div>
   );
 }

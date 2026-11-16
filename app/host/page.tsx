@@ -1,41 +1,72 @@
-import Link from "next/link";
+import ArcadeButton from "@/lib/components/ArcadeButton";
+import ArcadeCard from "@/lib/components/ArcadeCard";
+import GameSubHeader from "@/lib/components/GameSubHeader";
 import { MOCK_QUIZZES } from "@/lib/game/mockData";
+
+const QUIZ_ACCENT_BARS = [
+  "bg-primary",
+  "bg-secondary",
+  "bg-accent",
+  "bg-info",
+] as const;
 
 // Host Game dashboard (Prototype V1). Create Quiz and Start Game lead to
 // placeholder screens that teammates will replace.
 export default function HostGame() {
   return (
-    <main className="flex flex-col items-center gap-8 px-4 py-12">
-      <section className="flex max-w-2xl flex-col items-center gap-2 text-center">
-        <h1 className="text-4xl font-bold">Host a Game</h1>
-        <p className="text-lg opacity-70">Pick a quiz to start a game, or create a new one.</p>
-      </section>
+    <main className="flex min-h-screen flex-col bg-base-200 px-4 py-6">
+      <GameSubHeader
+        backHref="/"
+        rightSlot={
+          <ArcadeButton href="/host/create" variant="secondary">
+            + Create Quiz
+          </ArcadeButton>
+        }
+      />
 
-      <div className="flex flex-wrap justify-center gap-3">
-        <Link href="/host/create" className="btn btn-secondary">
-          + Create Quiz
-        </Link>
-        <Link href="/" className="btn btn-ghost">
-          ← Back to Play Now
-        </Link>
+      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 py-8">
+        <section className="flex flex-col gap-2">
+          <h1 className="text-4xl font-black tracking-tight sm:text-5xl">
+            Host a Game
+          </h1>
+          <p className="text-lg font-medium opacity-75">
+            Select a quiz below to open a lobby for your class.
+          </p>
+        </section>
+
+        <section className="grid w-full gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {MOCK_QUIZZES.map((quiz, index) => {
+            const barColor = QUIZ_ACCENT_BARS[index % QUIZ_ACCENT_BARS.length];
+            return (
+              <ArcadeCard
+                key={quiz.id}
+                accentColor={barColor}
+                accentSize="sm"
+                hoverLift
+                bodyClassName="justify-between gap-6 p-6"
+              >
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <h2 className="card-title text-2xl font-black">
+                      {quiz.title}
+                    </h2>
+                    <span className="badge badge-neutral font-bold">
+                      {quiz.questionCount} Qs
+                    </span>
+                  </div>
+                  <p className="text-base opacity-75">{quiz.description}</p>
+                </div>
+
+                <div className="card-actions justify-end">
+                  <ArcadeButton href="/host/start" variant="primary" block>
+                    Start Game
+                  </ArcadeButton>
+                </div>
+              </ArcadeCard>
+            );
+          })}
+        </section>
       </div>
-
-      <section className="grid w-full max-w-5xl gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {MOCK_QUIZZES.map((quiz) => (
-          <div key={quiz.id} className="card border border-base-300 bg-base-100 shadow-md">
-            <div className="card-body">
-              <span className="badge badge-soft badge-primary">{quiz.questionCount} questions</span>
-              <h2 className="card-title">{quiz.title}</h2>
-              <p className="opacity-70">{quiz.description}</p>
-              <div className="card-actions mt-2 justify-end">
-                <Link href="/host/start" className="btn btn-primary">
-                  Start Game
-                </Link>
-              </div>
-            </div>
-          </div>
-        ))}
-      </section>
     </main>
   );
 }

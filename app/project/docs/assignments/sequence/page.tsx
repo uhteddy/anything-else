@@ -1,35 +1,33 @@
-import Image from "next/image";
+import ArcadeFigureCard from "@/lib/components/ArcadeFigureCard";
+import ArcadePageHeader from "@/lib/components/ArcadePageHeader";
 
 export default function Docs() {
   return (
-    <div className="flex flex-col items-center justify-center gap-8 px-4 py-8">
-      <h1 className="text-2xl font-bold">Sequence Diagrams</h1>
+    <div className="flex flex-col gap-8">
+      <ArcadePageHeader
+        title="Sequence Diagrams"
+        description="Runtime interaction flows for hosting a live session and grading submitted answers."
+      />
 
-      <section className="flex w-full flex-col items-center gap-4">
-        <h2 className="text-xl font-semibold">Host Game</h2>
-        <figure className="w-full max-w-6xl">
-          <Image
-            src="/project-files/sequence_host_game.png"
-            alt="Sequence diagram showing an instructor hosting a game and students joining"
-            width={2840}
-            height={3140}
-            className="h-auto w-full"
-          />
-        </figure>
-      </section>
+      <ArcadeFigureCard
+        title="Host Game Flow"
+        description="Instructor opens a game lobby and students join via PIN."
+        src="/project-files/sequence_host_game.png"
+        alt="Sequence diagram showing an instructor hosting a game and students joining"
+        width={2840}
+        height={3140}
+        accentColor="bg-primary"
+      />
 
-      <section className="flex w-full flex-col items-center gap-4">
-        <h2 className="text-xl font-semibold">Submit Answer</h2>
-        <figure className="w-full max-w-6xl">
-          <Image
-            src="/project-files/sequence_submit_answer.png"
-            alt="Sequence diagram showing a student submitting an answer, grading, and scoring"
-            width={3660}
-            height={2728}
-            className="h-auto w-full"
-          />
-        </figure>
-      </section>
+      <ArcadeFigureCard
+        title="Submit Answer Flow"
+        description="Student group submits an open-ended response, graded by Jev and scored on the leaderboard."
+        src="/project-files/sequence_submit_answer.png"
+        alt="Sequence diagram showing a student submitting an answer, grading, and scoring"
+        width={3660}
+        height={2728}
+        accentColor="bg-secondary"
+      />
     </div>
   );
 }

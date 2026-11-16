@@ -1,39 +1,61 @@
+import ArcadeButton from "@/lib/components/ArcadeButton";
+import ArcadePageHeader from "@/lib/components/ArcadePageHeader";
+import ArcadePdfCard from "@/lib/components/ArcadePdfCard";
+
+const DEMOS = [
+  {
+    title: "Host Screen Demo",
+    description:
+      "Classroom display view showing the lobby PIN, live questions, timer, and leaderboard.",
+    pdfUrl: "/project-files/demo_host_screen.pdf",
+    iframeTitle: "Host screen demo PDF",
+    accentColor: "bg-primary" as const,
+    buttonVariant: "primary" as const,
+  },
+  {
+    title: "Student Phone Demo",
+    description:
+      "Player device view for entering a PIN, choosing a nickname, and submitting answers.",
+    pdfUrl: "/project-files/demo_student_phone.pdf",
+    iframeTitle: "Student phone demo PDF",
+    accentColor: "bg-secondary" as const,
+    buttonVariant: "secondary" as const,
+  },
+];
+
 export default function Home() {
   return (
-    <main className="flex flex-col items-center gap-8 px-4 py-8">
-      <h1 className="text-2xl font-bold">Home Page</h1>
-
-      <section className="flex w-full max-w-6xl flex-col items-center gap-4">
-        <h2 className="text-xl font-semibold">Host Screen Demo</h2>
-        <a
-          href="/project-files/demo_host_screen.pdf"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Open the host screen demo PDF in a new tab
-        </a>
-        <iframe
-          src="/project-files/demo_host_screen.pdf"
-          title="Host screen demo PDF"
-          className="h-[80vh] min-h-150 w-full"
+    <main className="flex min-h-screen flex-col items-center bg-base-200 px-4 py-10">
+      <div className="flex w-full max-w-6xl flex-col gap-10">
+        <ArcadePageHeader
+          title="Project Demos"
+          description="Interactive UI mockups and screen flows for the classroom host screen and student devices."
+          actions={
+            <>
+              <ArcadeButton href="/" variant="primary">
+                Play Live Prototype
+              </ArcadeButton>
+              <ArcadeButton href="/project/docs" variant="neutral">
+                View Docs
+              </ArcadeButton>
+            </>
+          }
         />
-      </section>
 
-      <section className="flex w-full max-w-6xl flex-col items-center gap-4">
-        <h2 className="text-xl font-semibold">Student Phone Demo</h2>
-        <a
-          href="/project-files/demo_student_phone.pdf"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Open the student phone demo PDF in a new tab
-        </a>
-        <iframe
-          src="/project-files/demo_student_phone.pdf"
-          title="Student phone demo PDF"
-          className="h-[80vh] min-h-150 w-full"
-        />
-      </section>
+        <div className="flex flex-col gap-8">
+          {DEMOS.map((demo) => (
+            <ArcadePdfCard
+              key={demo.pdfUrl}
+              title={demo.title}
+              description={demo.description}
+              pdfUrl={demo.pdfUrl}
+              iframeTitle={demo.iframeTitle}
+              accentColor={demo.accentColor}
+              buttonVariant={demo.buttonVariant}
+            />
+          ))}
+        </div>
+      </div>
     </main>
   );
 }
