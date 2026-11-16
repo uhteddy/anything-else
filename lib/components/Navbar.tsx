@@ -13,10 +13,10 @@ type NavbarProps = {
 
 // NAV_PROPS defines each tab and nested tab for navbar.
 const NAV_PROPS: NavbarProps[] = [
-    { string: "Home", link: "/" },
-    { string: "Documentation", link: "/docs" },
-    { string: "Play Now", link: "/game" },
-    { string: "About Us", link: "/about_us" }
+    { string: "Home", link: "/project" },
+    { string: "Documentation", link: "/project/docs" },
+    { string: "Play Now", link: "/project/game" },
+    { string: "About Us", link: "/project/about_us" }
 ];
 
 // Checks whether or not a link is active based on the pathname. Returns true if the link is active, returns false if not.
