@@ -40,7 +40,11 @@ export default function Game() {
             </div>
           </div>
         </div>
+
       </section>
+        <div className="flex flex-col text-center">
+          <a href="/project/">Click here to learn more about the project!</a>
+        </div>
     </main>
   );
 }
