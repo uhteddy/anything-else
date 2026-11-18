@@ -1,10 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
-
-const MAX_QUESTIONS = 50;
-const MAX_IMAGE_SIZE = 25 * 1024 * 1024;
+import { useActionState, useRef, useState } from "react";
+import { createQuizAction } from "@/app/host/create/actions";
+import {
+  IMAGE_EXTENSIONS,
+  MAX_IMAGE_SIZE_BYTES,
+  MAX_PROMPT_LENGTH,
+  MAX_QUESTIONS,
+  MAX_QUIZ_TITLE_LENGTH,
+  MAX_REFERENCE_ANSWER_LENGTH,
+  MAX_TIME_LIMIT_SECONDS,
+  MAX_TOTAL_IMAGE_SIZE_BYTES,
+  MIN_TIME_LIMIT_SECONDS,
+} from "@/lib/quiz-constants";
 
 type QuizQuestion = {
   id: string;
@@ -23,6 +32,7 @@ type QuestionErrors = {
 };
 
 type FormErrors = {
+  form?: string;
   title?: string;
   questions: Record<string, QuestionErrors>;
 };
@@ -39,15 +49,16 @@ function createQuestion(id: string): QuizQuestion {
 }
 
 export default function CreateQuiz() {
+  const [saveState, formAction, isPending] = useActionState(createQuizAction, {});
   const [title, setTitle] = useState("");
   const [questions, setQuestions] = useState([createQuestion("question-1")]);
   const [errors, setErrors] = useState<FormErrors>({ questions: {} });
-  const [draftReady, setDraftReady] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
   const nextQuestionNumber = useRef(2);
 
   function clearFeedback() {
     setErrors({ questions: {} });
-    setDraftReady(false);
+    setIsDirty(true);
   }
 
   function updateQuestion(id: string, updates: Partial<QuizQuestion>) {
@@ -65,18 +76,18 @@ export default function CreateQuiz() {
       return;
     }
 
-    if (!file.type.startsWith("image/")) {
+    if (!Object.hasOwn(IMAGE_EXTENSIONS, file.type)) {
       updateQuestion(id, {
         image: null,
-        imageError: "Choose an image file.",
+        imageError: "Choose a JPEG, PNG, WebP, or GIF image.",
       });
       return;
     }
 
-    if (file.size >= MAX_IMAGE_SIZE) {
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
       updateQuestion(id, {
         image: null,
-        imageError: "The image must be smaller than 25 MB.",
+        imageError: "The image must be no larger than 25 MB.",
       });
       return;
     }
@@ -99,13 +110,12 @@ export default function CreateQuiz() {
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
     const nextErrors: FormErrors = { questions: {} };
     if (!title.trim()) {
       nextErrors.title = "Enter a quiz title.";
     }
 
+    let totalImageSize = 0;
     for (const question of questions) {
       const questionErrors: QuestionErrors = {};
       if (!question.prompt.trim() && !question.image) {
@@ -118,17 +128,39 @@ export default function CreateQuiz() {
         questionErrors.referenceAnswer = "Enter a reference answer.";
       }
       const timeLimit = Number(question.timeLimitSeconds);
-      if (!Number.isInteger(timeLimit) || timeLimit < 30 || timeLimit > 300) {
+      if (
+        !Number.isInteger(timeLimit) ||
+        timeLimit < MIN_TIME_LIMIT_SECONDS ||
+        timeLimit > MAX_TIME_LIMIT_SECONDS
+      ) {
         questionErrors.timeLimitSeconds = "Choose a time from 30 to 300 seconds.";
       }
+      if (question.image) totalImageSize += question.image.size;
       if (Object.keys(questionErrors).length > 0) {
         nextErrors.questions[question.id] = questionErrors;
       }
     }
 
+    if (totalImageSize > MAX_TOTAL_IMAGE_SIZE_BYTES) {
+      nextErrors.form = "Quiz images must total no more than 25 MB.";
+    }
+
     setErrors(nextErrors);
-    setDraftReady(!nextErrors.title && Object.keys(nextErrors.questions).length === 0);
+    if (
+      nextErrors.form ||
+      nextErrors.title ||
+      Object.keys(nextErrors.questions).length > 0
+    ) {
+      event.preventDefault();
+    } else {
+      setIsDirty(false);
+    }
   }
+
+  const selectedImageSize = questions.reduce(
+    (total, question) => total + (question.image?.size ?? 0),
+    0,
+  );
 
   return (
     <main className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-4 py-8 sm:py-12">
@@ -148,7 +180,12 @@ export default function CreateQuiz() {
         </div>
       </header>
 
-      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
+      <form
+        action={formAction}
+        onSubmit={handleSubmit}
+        noValidate
+        className="flex flex-col gap-6"
+      >
         <section className="card border border-base-300 bg-base-100 shadow-sm">
           <div className="card-body gap-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
@@ -164,6 +201,7 @@ export default function CreateQuiz() {
               </label>
               <input
                 id="quiz-title"
+                name="title"
                 className={`input input-bordered w-full ${errors.title ? "input-error" : ""}`}
                 value={title}
                 onChange={(event) => {
@@ -171,7 +209,7 @@ export default function CreateQuiz() {
                   clearFeedback();
                 }}
                 placeholder="e.g. Introduction to Biology"
-                maxLength={100}
+                maxLength={MAX_QUIZ_TITLE_LENGTH}
                 aria-invalid={Boolean(errors.title)}
                 aria-describedby={errors.title ? "quiz-title-error" : undefined}
               />
@@ -216,12 +254,14 @@ export default function CreateQuiz() {
                     </label>
                     <textarea
                       id={`${question.id}-prompt`}
+                      name="prompt"
                       className={`textarea textarea-bordered min-h-28 w-full ${questionErrors.prompt ? "textarea-error" : ""}`}
                       value={question.prompt}
                       onChange={(event) =>
                         updateQuestion(question.id, { prompt: event.target.value })
                       }
                       placeholder="Ask a question students can explain in their own words."
+                      maxLength={MAX_PROMPT_LENGTH}
                       aria-invalid={Boolean(questionErrors.prompt)}
                       aria-describedby={
                         questionErrors.prompt ? `${question.id}-prompt-error` : undefined
@@ -245,7 +285,8 @@ export default function CreateQuiz() {
                     <input
                       id={`${question.id}-image`}
                       type="file"
-                      accept="image/*"
+                      name="image"
+                      accept={Object.keys(IMAGE_EXTENSIONS).join(",")}
                       className="file-input file-input-bordered w-full"
                       onChange={(event) =>
                         handleImageChange(question.id, event.target.files?.[0])
@@ -267,7 +308,7 @@ export default function CreateQuiz() {
                       </p>
                     ) : (
                       <p id={`${question.id}-image-help`} className="label">
-                        Images must be smaller than 25 MB.
+                        JPEG, PNG, WebP, or GIF; no more than 25 MB total across this quiz.
                       </p>
                     )}
                     {question.image && (
@@ -286,6 +327,7 @@ export default function CreateQuiz() {
                     </label>
                     <textarea
                       id={`${question.id}-answer`}
+                      name="referenceAnswer"
                       className={`textarea textarea-bordered min-h-24 w-full ${questionErrors.referenceAnswer ? "textarea-error" : ""}`}
                       value={question.referenceAnswer}
                       onChange={(event) =>
@@ -294,6 +336,7 @@ export default function CreateQuiz() {
                         })
                       }
                       placeholder="What should a correct, complete answer include?"
+                      maxLength={MAX_REFERENCE_ANSWER_LENGTH}
                       aria-invalid={Boolean(questionErrors.referenceAnswer)}
                       aria-describedby={
                         questionErrors.referenceAnswer
@@ -322,9 +365,10 @@ export default function CreateQuiz() {
                     <div className="join">
                       <input
                         id={`${question.id}-time-limit`}
+                        name="timeLimitSeconds"
                         type="number"
-                        min={30}
-                        max={300}
+                        min={MIN_TIME_LIMIT_SECONDS}
+                        max={MAX_TIME_LIMIT_SECONDS}
                         step={1}
                         className={`input input-bordered join-item w-full ${questionErrors.timeLimitSeconds ? "input-error" : ""}`}
                         value={question.timeLimitSeconds}
@@ -354,7 +398,8 @@ export default function CreateQuiz() {
                       </p>
                     ) : (
                       <p id={`${question.id}-time-limit-help`} className="label">
-                        Choose between 30 seconds and 5 minutes.
+                        Choose between {MIN_TIME_LIMIT_SECONDS} seconds and{" "}
+                        {MAX_TIME_LIMIT_SECONDS / 60} minutes.
                       </p>
                     )}
                   </fieldset>
@@ -373,17 +418,30 @@ export default function CreateQuiz() {
           + Add question
         </button>
 
-        <section className="rounded-box border border-info/30 bg-info/10 p-4 text-sm">
-          <p className="font-semibold">Draft preview only</p>
-          <p className="mt-1 text-base-content/70">
-            Quiz saving is not connected yet. Your draft will not be stored when you leave this page.
-          </p>
-        </section>
+        <p className="text-sm text-base-content/70" aria-live="polite">
+          Selected images: {(selectedImageSize / (1024 * 1024)).toFixed(1)} MB / 25 MB
+        </p>
 
-        {draftReady && (
-          <p className="alert alert-success" role="status">
-            This quiz draft is valid: “{title.trim()}” with {questions.length}{" "}
-            {questions.length === 1 ? "question" : "questions"}.
+        {errors.form && (
+          <p className="alert alert-error" role="alert">
+            {errors.form}
+          </p>
+        )}
+
+        {!isDirty && !isPending && saveState.error && (
+          <p className="alert alert-error" role="alert">
+            {saveState.error}
+            {saveState.error.startsWith("Your session") && (
+              <>
+                {" "}
+                <Link
+                  href="/login?next=%2Fhost%2Fcreate"
+                  className="link link-hover font-semibold"
+                >
+                  Sign in
+                </Link>
+              </>
+            )}
           </p>
         )}
 
@@ -391,8 +449,8 @@ export default function CreateQuiz() {
           <Link href="/host" className="btn btn-ghost">
             Cancel
           </Link>
-          <button type="submit" className="btn btn-primary">
-            Review quiz draft
+          <button type="submit" className="btn btn-primary" disabled={isPending}>
+            {isPending ? "Saving quiz..." : "Save quiz"}
           </button>
         </div>
       </form>

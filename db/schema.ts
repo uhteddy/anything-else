@@ -38,22 +38,66 @@ export const instructors = pgTable(
 
 export const questionSet = pgTable('question_set', {
   id: uuid('id').primaryKey().defaultRandom(),
-  instructor_id: uuid('instructor_id').references(() => instructors.id, { onDelete: 'cascade' }),
+  instructor_id: uuid('instructor_id')
+    .notNull()
+    .references(() => instructors.id, { onDelete: 'cascade' }),
   title: text().notNull()
-})
+}, (table) => [
+  check("question_set_title_nonempty", sql`length(trim(${table.title})) > 0`),
+  pgPolicy("question_set_instructor_access", {
+    as: "permissive",
+    for: "all",
+    to: authenticatedRole,
+    using: sql`${table.instructor_id} = ${authUid}`,
+    withCheck: sql`${table.instructor_id} = ${authUid}`,
+  }),
+])
 
 export const questions = pgTable('questions', {
   id: uuid('id').defaultRandom().primaryKey(),
-  question_set_id: uuid('question_set_id').references(() => questionSet.id, { onDelete: 'cascade' }),
-  question: text().notNull(),
+  question_set_id: uuid('question_set_id')
+    .notNull()
+    .references(() => questionSet.id, { onDelete: 'cascade' }),
+  question: text(),
   correct_answer: text().notNull(),
-  position: integer().notNull()
+  position: integer().notNull(),
+  image_path: text('image_path'),
+  time_limit_seconds: integer('time_limit_seconds').default(30).notNull(),
 }, (table) => [
   unique("question_set_position_unique").on(
     table.question_set_id,
     table.position
   ),
   check("question_position_nonnegative", sql`${table.position} >= 0`),
+  check(
+    "question_prompt_present",
+    sql`length(trim(coalesce(${table.question}, ''))) > 0 OR ${table.image_path} IS NOT NULL`,
+  ),
+  check(
+    "question_reference_answer_nonempty",
+    sql`length(trim(${table.correct_answer})) > 0`,
+  ),
+  check(
+    "question_time_limit_range",
+    sql`${table.time_limit_seconds} >= 30 AND ${table.time_limit_seconds} <= 300`,
+  ),
+  pgPolicy("questions_instructor_access", {
+    as: "permissive",
+    for: "all",
+    to: authenticatedRole,
+    using: sql`EXISTS (
+      SELECT 1
+      FROM public.question_set AS owner_set
+      WHERE owner_set.id = ${table.question_set_id}
+        AND owner_set.instructor_id = ${authUid}
+    )`,
+    withCheck: sql`EXISTS (
+      SELECT 1
+      FROM public.question_set AS owner_set
+      WHERE owner_set.id = ${table.question_set_id}
+        AND owner_set.instructor_id = ${authUid}
+    )`,
+  }),
 ])
 
 export const gameStateEnum = pgEnum('gameState', ['LOBBY', 'QUESTION_ACTIVE', 'QUESTION_ENDED', 'LEADERBOARD', 'FINISHED']);
