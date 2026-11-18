@@ -2,26 +2,28 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useActionState } from "react";
+import { joinGameAction } from "@/app/join/actions";
 
-// Join Game UI (Prototype V1). No real game session: a valid-looking
-// submission goes to the waiting lobby, carrying the PIN and nickname in the URL.
 export default function JoinGame() {
-  const router = useRouter();
+  const [joinState, formAction, isPending] = useActionState(joinGameAction, {});
   const [pin, setPin] = useState("");
   const [nickname, setNickname] = useState("");
   const [errors, setErrors] = useState<{ pin?: string; nickname?: string }>({});
+  const [hideServerError, setHideServerError] = useState(false);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
     const name = nickname.trim();
     const next: { pin?: string; nickname?: string } = {};
     if (!pin) next.pin = "Please enter a game PIN.";
     else if (pin.length !== 6) next.pin = "The game PIN must be 6 digits.";
     if (!name) next.nickname = "Please enter a nickname.";
     setErrors(next);
-    if (next.pin || next.nickname) return;
-    router.push(`/join/lobby?${new URLSearchParams({ pin, nickname: name })}`);
+    if (next.pin || next.nickname) {
+      e.preventDefault();
+      return;
+    }
+    setHideServerError(false);
   }
 
   return (
@@ -32,6 +34,7 @@ export default function JoinGame() {
       </section>
 
       <form
+        action={formAction}
         onSubmit={handleSubmit}
         noValidate
         className="card w-full max-w-md border border-base-300 bg-base-100 shadow-md"
@@ -43,13 +46,18 @@ export default function JoinGame() {
             </label>
             <input
               id="pin"
+              name="pin"
               className={`input input-lg w-full text-center font-mono text-2xl tracking-widest ${errors.pin ? "input-error" : ""}`}
               inputMode="numeric"
               autoComplete="off"
               placeholder="000000"
               maxLength={6}
               value={pin}
-              onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
+              onChange={(e) => {
+                setPin(e.target.value.replace(/\D/g, ""));
+                setErrors((current) => ({ ...current, pin: undefined }));
+                setHideServerError(true);
+              }}
               aria-invalid={Boolean(errors.pin)}
               aria-describedby={errors.pin ? "pin-error" : undefined}
             />
@@ -66,11 +74,16 @@ export default function JoinGame() {
             </label>
             <input
               id="nickname"
+              name="nickname"
               className={`input input-lg w-full ${errors.nickname ? "input-error" : ""}`}
               placeholder="e.g. CodeNinja"
               maxLength={16}
               value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
+              onChange={(e) => {
+                setNickname(e.target.value);
+                setErrors((current) => ({ ...current, nickname: undefined }));
+                setHideServerError(true);
+              }}
               aria-invalid={Boolean(errors.nickname)}
               aria-describedby={errors.nickname ? "nickname-error" : undefined}
             />
@@ -81,8 +94,14 @@ export default function JoinGame() {
             )}
           </fieldset>
 
-          <button type="submit" className="btn btn-lg btn-primary">
-            Join Game
+          {!hideServerError && !isPending && joinState.error && (
+            <p className="alert alert-error" role="alert">
+              {joinState.error}
+            </p>
+          )}
+
+          <button type="submit" className="btn btn-lg btn-primary" disabled={isPending}>
+            {isPending ? "Joining..." : "Join Game"}
           </button>
           <Link href="/" className="btn btn-ghost">
             ← Back to Play Now

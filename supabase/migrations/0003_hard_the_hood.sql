@@ -1,0 +1,1 @@
+ALTER TABLE "questions" ADD CONSTRAINT "question_reference_answer_nonempty" CHECK (length(trim("questions"."correct_answer")) > 0);

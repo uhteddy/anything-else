@@ -43,7 +43,9 @@ export default function Game() {
 
       </section>
         <div className="flex flex-col text-center">
-          <a href="/project/">Click here to learn more about the project!</a>
+          <a href="/project/" className="text-blue-500 underline">
+            Click here to learn more about the project!
+          </a>
         </div>
     </main>
   );
