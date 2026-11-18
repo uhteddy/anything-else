@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
 
-const PROTECTED_PREFIXES = ['/dashboard', '/instructor'];
+const PROTECTED_PREFIXES = ['/dashboard', '/instructor', '/host'];
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -29,7 +29,6 @@ export async function proxy(request: NextRequest) {
   if (!data?.claims && PROTECTED_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {
     const loginUrl = request.nextUrl.clone();
 
-    // CHANGE THIS LATER WHEN PAGES EXIST
     loginUrl.pathname = '/login';
     loginUrl.search = '';
     loginUrl.searchParams.set('next', `${pathname}${request.nextUrl.search}`);

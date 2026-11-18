@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { signOutAction } from "@/app/auth/actions";
 import { MOCK_QUIZZES } from "@/lib/game/mockData";
 
 // Host Game dashboard (Prototype V1). Create Quiz and Start Game lead to
@@ -18,6 +19,11 @@ export default function HostGame() {
         <Link href="/" className="btn btn-ghost">
           ← Back to Play Now
         </Link>
+        <form action={signOutAction}>
+          <button type="submit" className="btn btn-ghost">
+            Sign out
+          </button>
+        </form>
       </div>
 
       <section className="grid w-full max-w-5xl gap-6 md:grid-cols-2 lg:grid-cols-3">
