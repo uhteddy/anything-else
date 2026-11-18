@@ -6,8 +6,8 @@ for (const file of ['.env.local', '.env']) {
   } catch { /* Optional local env files may be absent. */ }
 }
 
-if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL is required');
+if (!process.env.POSTGRES_URL) {
+  throw new Error('POSTGRES_URL is required');
 }
 
 export default defineConfig({
@@ -15,6 +15,6 @@ export default defineConfig({
   out: './supabase/migrations',
   dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.DATABASE_URL,
+    url: process.env.POSTGRES_URL,
   },
 });

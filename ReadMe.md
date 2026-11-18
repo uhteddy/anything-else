@@ -40,7 +40,7 @@ Prototype v1 puts every screen in place so the full game can be clicked through.
 
    | `.env.local` Variable | Supabase CLI Output Field | Local Default Example |
    | :--- | :--- | :--- |
-   | `DATABASE_URL` | **Database → URL** | `postgresql://postgres:postgres@127.0.0.1:54322/postgres` |
+   | `POSTGRES_URL` | **Database → URL** | `postgresql://postgres:postgres@127.0.0.1:54322/postgres` |
    | `NEXT_PUBLIC_SUPABASE_URL` | **APIs → Project URL** | `http://127.0.0.1:54321` |
    | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | **Authentication Keys → Publishable** | `sb_publishable_...` |
    | `NEXT_PRIVATE_SUPABASE_SECRET_KEY` | **Authentication Keys → Secret** | `sb_secret_...` |
