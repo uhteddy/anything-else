@@ -34,6 +34,7 @@ export function HostLobby({
   const [connectionStatus, setConnectionStatus] = useState("Connecting…");
   const [error, setError] = useState("");
   const [isClosing, setIsClosing] = useState(false);
+  const [groupSize, setGroupSize] = useState(3);
 
   const refreshPlayers = useCallback(async () => {
     const result = await getHostLobbyPlayers(gameId);
@@ -175,6 +176,36 @@ export function HostLobby({
           {error}
         </p>
       )}
+
+      <section className="card border border-base-300 bg-base-100 shadow-sm">
+        <div className="card-body gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <fieldset className="fieldset">
+            <label htmlFor="group-size" className="fieldset-legend">
+              Students per group
+            </label>
+            <select
+              id="group-size"
+              className="select select-bordered w-40"
+              value={groupSize}
+              onChange={(event) => setGroupSize(Number(event.target.value))}
+            >
+              {[2, 3, 4, 5, 6].map((size) => (
+                <option key={size} value={size}>
+                  {size} students
+                </option>
+              ))}
+            </select>
+            <p className="label">
+              {players.length > 0
+                ? `About ${Math.ceil(players.length / groupSize)} groups for ${players.length} students.`
+                : "Groups are formed once students have joined."}
+            </p>
+          </fieldset>
+          <Link href={`/host/game/${gameId}/groups`} className="btn btn-primary">
+            Assign groups →
+          </Link>
+        </div>
+      </section>
 
       <div className="flex justify-end">
         <button

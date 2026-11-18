@@ -5,6 +5,7 @@ import { connection } from "next/server";
 import { db } from "@/db";
 import { questionSet, questions } from "@/db/schema";
 import { signOutAction } from "@/app/auth/actions";
+import { DeleteQuizButton } from "@/app/host/delete-quiz-button";
 import { getClaims } from "@/lib/auth";
 
 export const instant = false;
@@ -69,6 +70,10 @@ export default async function HostGame() {
                 </span>
                 <h2 className="card-title">{quiz.title}</h2>
                 <div className="card-actions mt-2 justify-end">
+                  <DeleteQuizButton quizTitle={quiz.title} />
+                  <Link href={`/host/edit/${quiz.id}`} className="btn btn-outline">
+                    Edit
+                  </Link>
                   <Link href={`/host/start?quizId=${quiz.id}`} className="btn btn-primary">
                     Start Game
                   </Link>

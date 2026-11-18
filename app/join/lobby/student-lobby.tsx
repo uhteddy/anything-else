@@ -200,7 +200,10 @@ export function StudentLobby({
         </p>
       )}
 
-      <div className="flex justify-center">
+      <div className="flex flex-col items-center gap-2">
+        <Link href="/play/group" className="btn btn-outline btn-primary">
+          Preview game screens (prototype)
+        </Link>
         <button
           type="button"
           className="btn btn-ghost"
