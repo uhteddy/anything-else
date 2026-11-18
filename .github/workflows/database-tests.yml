@@ -55,7 +55,7 @@ jobs:
             echo "NEXT_PUBLIC_SUPABASE_URL=$(jq -r '.API_URL' <<< "$status")"
             echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$(jq -r '.PUBLISHABLE_KEY' <<< "$status")"
             echo "NEXT_PRIVATE_SUPABASE_SECRET_KEY=$(jq -r '.SECRET_KEY' <<< "$status")"
-            echo "DATABASE_URL=$(jq -r '.DB_URL' <<< "$status")"
+            echo "POSTGRES_URL=$(jq -r '.DB_URL' <<< "$status")"
           } >> "$GITHUB_ENV"
 
       - name: Run tests
