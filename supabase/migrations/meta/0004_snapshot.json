@@ -1,0 +1,464 @@
+{
+  "id": "3c005ddb-04a6-41ed-91b0-ece9a59131db",
+  "prevId": "7e27a2a8-479f-48ad-97db-d9e94fe76492",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.game_players": {
+      "name": "game_players",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "game_session_id": {
+          "name": "game_session_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nickname": {
+          "name": "nickname",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "color": {
+          "name": "color",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "game_players_game_session_id_game_sessions_id_fk": {
+          "name": "game_players_game_session_id_game_sessions_id_fk",
+          "tableFrom": "game_players",
+          "tableTo": "game_sessions",
+          "columnsFrom": [
+            "game_session_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "game_players_session_nickname_unique": {
+          "name": "game_players_session_nickname_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "game_session_id",
+            "nickname"
+          ]
+        }
+      },
+      "policies": {
+        "game_players_host_access": {
+          "name": "game_players_host_access",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "authenticated"
+          ],
+          "using": "EXISTS (\n      SELECT 1\n      FROM public.game_sessions AS owner_game\n      WHERE owner_game.id = \"game_players\".\"game_session_id\"\n        AND owner_game.instructor_id = (select auth.uid())\n    )",
+          "withCheck": "EXISTS (\n      SELECT 1\n      FROM public.game_sessions AS owner_game\n      WHERE owner_game.id = \"game_players\".\"game_session_id\"\n        AND owner_game.instructor_id = (select auth.uid())\n    )"
+        }
+      },
+      "checkConstraints": {
+        "game_players_nickname_length": {
+          "name": "game_players_nickname_length",
+          "value": "length(trim(\"game_players\".\"nickname\")) BETWEEN 1 AND 16"
+        },
+        "game_players_color_nonempty": {
+          "name": "game_players_color_nonempty",
+          "value": "length(trim(\"game_players\".\"color\")) > 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.game_sessions": {
+      "name": "game_sessions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "instructor_id": {
+          "name": "instructor_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "question_set_id": {
+          "name": "question_set_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pin": {
+          "name": "pin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "channel_token": {
+          "name": "channel_token",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "state": {
+          "name": "state",
+          "type": "gameState",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'LOBBY'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "game_sessions_instructor_id_instructors_id_fk": {
+          "name": "game_sessions_instructor_id_instructors_id_fk",
+          "tableFrom": "game_sessions",
+          "tableTo": "instructors",
+          "columnsFrom": [
+            "instructor_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "game_sessions_question_set_id_question_set_id_fk": {
+          "name": "game_sessions_question_set_id_question_set_id_fk",
+          "tableFrom": "game_sessions",
+          "tableTo": "question_set",
+          "columnsFrom": [
+            "question_set_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "game_sessions_pin_unique": {
+          "name": "game_sessions_pin_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "pin"
+          ]
+        },
+        "game_sessions_channel_token_unique": {
+          "name": "game_sessions_channel_token_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "channel_token"
+          ]
+        }
+      },
+      "policies": {
+        "game_sessions_instructor_access": {
+          "name": "game_sessions_instructor_access",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "authenticated"
+          ],
+          "using": "\"game_sessions\".\"instructor_id\" = (select auth.uid())",
+          "withCheck": "\"game_sessions\".\"instructor_id\" = (select auth.uid())"
+        }
+      },
+      "checkConstraints": {
+        "game_sessions_pin_format": {
+          "name": "game_sessions_pin_format",
+          "value": "\"game_sessions\".\"pin\" ~ '^[0-9]{6}$'"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.instructors": {
+      "name": "instructors",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "display_name": {
+          "name": "display_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "instructors_id_users_id_fk": {
+          "name": "instructors_id_users_id_fk",
+          "tableFrom": "instructors",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "instructors_can_view_self": {
+          "name": "instructors_can_view_self",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "authenticated"
+          ],
+          "using": "\"instructors\".\"id\" = (select auth.uid())"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.question_set": {
+      "name": "question_set",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "instructor_id": {
+          "name": "instructor_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "question_set_instructor_id_instructors_id_fk": {
+          "name": "question_set_instructor_id_instructors_id_fk",
+          "tableFrom": "question_set",
+          "tableTo": "instructors",
+          "columnsFrom": [
+            "instructor_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "question_set_instructor_access": {
+          "name": "question_set_instructor_access",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "authenticated"
+          ],
+          "using": "\"question_set\".\"instructor_id\" = (select auth.uid())",
+          "withCheck": "\"question_set\".\"instructor_id\" = (select auth.uid())"
+        }
+      },
+      "checkConstraints": {
+        "question_set_title_nonempty": {
+          "name": "question_set_title_nonempty",
+          "value": "length(trim(\"question_set\".\"title\")) > 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.questions": {
+      "name": "questions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "question_set_id": {
+          "name": "question_set_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "question": {
+          "name": "question",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "correct_answer": {
+          "name": "correct_answer",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "position": {
+          "name": "position",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "image_path": {
+          "name": "image_path",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "time_limit_seconds": {
+          "name": "time_limit_seconds",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 30
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "questions_question_set_id_question_set_id_fk": {
+          "name": "questions_question_set_id_question_set_id_fk",
+          "tableFrom": "questions",
+          "tableTo": "question_set",
+          "columnsFrom": [
+            "question_set_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "question_set_position_unique": {
+          "name": "question_set_position_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "question_set_id",
+            "position"
+          ]
+        }
+      },
+      "policies": {
+        "questions_instructor_access": {
+          "name": "questions_instructor_access",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "authenticated"
+          ],
+          "using": "EXISTS (\n      SELECT 1\n      FROM public.question_set AS owner_set\n      WHERE owner_set.id = \"questions\".\"question_set_id\"\n        AND owner_set.instructor_id = (select auth.uid())\n    )",
+          "withCheck": "EXISTS (\n      SELECT 1\n      FROM public.question_set AS owner_set\n      WHERE owner_set.id = \"questions\".\"question_set_id\"\n        AND owner_set.instructor_id = (select auth.uid())\n    )"
+        }
+      },
+      "checkConstraints": {
+        "question_position_nonnegative": {
+          "name": "question_position_nonnegative",
+          "value": "\"questions\".\"position\" >= 0"
+        },
+        "question_prompt_present": {
+          "name": "question_prompt_present",
+          "value": "length(trim(coalesce(\"questions\".\"question\", ''))) > 0 OR \"questions\".\"image_path\" IS NOT NULL"
+        },
+        "question_reference_answer_nonempty": {
+          "name": "question_reference_answer_nonempty",
+          "value": "length(trim(\"questions\".\"correct_answer\")) > 0"
+        },
+        "question_time_limit_range": {
+          "name": "question_time_limit_range",
+          "value": "\"questions\".\"time_limit_seconds\" >= 30 AND \"questions\".\"time_limit_seconds\" <= 300"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.gameState": {
+      "name": "gameState",
+      "schema": "public",
+      "values": [
+        "LOBBY",
+        "QUESTION_ACTIVE",
+        "QUESTION_ENDED",
+        "LEADERBOARD",
+        "FINISHED"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

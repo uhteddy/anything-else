@@ -102,6 +102,71 @@ export const questions = pgTable('questions', {
 
 export const gameStateEnum = pgEnum('gameState', ['LOBBY', 'QUESTION_ACTIVE', 'QUESTION_ENDED', 'LEADERBOARD', 'FINISHED']);
 
+export const gameSessions = pgTable('game_sessions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  instructor_id: uuid('instructor_id')
+    .notNull()
+    .references(() => instructors.id, { onDelete: 'cascade' }),
+  question_set_id: uuid('question_set_id')
+    .notNull()
+    .references(() => questionSet.id, { onDelete: 'cascade' }),
+  pin: text('pin').notNull(),
+  channel_token: uuid('channel_token').notNull().defaultRandom(),
+  state: gameStateEnum('state').notNull().default('LOBBY'),
+  created_at: timestamp('created_at').defaultNow().notNull(),
+}, (table) => [
+  unique("game_sessions_pin_unique").on(table.pin),
+  unique("game_sessions_channel_token_unique").on(table.channel_token),
+  check("game_sessions_pin_format", sql`${table.pin} ~ '^[0-9]{6}$'`),
+  pgPolicy("game_sessions_instructor_access", {
+    as: "permissive",
+    for: "all",
+    to: authenticatedRole,
+    using: sql`${table.instructor_id} = ${authUid}`,
+    withCheck: sql`${table.instructor_id} = ${authUid}`,
+  }),
+])
+
+export const gamePlayers = pgTable('game_players', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  game_session_id: uuid('game_session_id')
+    .notNull()
+    .references(() => gameSessions.id, { onDelete: 'cascade' }),
+  nickname: text('nickname').notNull(),
+  color: text('color').notNull(),
+  created_at: timestamp('created_at').defaultNow().notNull(),
+}, (table) => [
+  unique("game_players_session_nickname_unique").on(
+    table.game_session_id,
+    table.nickname,
+  ),
+  check(
+    "game_players_nickname_length",
+    sql`length(trim(${table.nickname})) BETWEEN 1 AND 16`,
+  ),
+  check(
+    "game_players_color_nonempty",
+    sql`length(trim(${table.color})) > 0`,
+  ),
+  pgPolicy("game_players_host_access", {
+    as: "permissive",
+    for: "all",
+    to: authenticatedRole,
+    using: sql`EXISTS (
+      SELECT 1
+      FROM public.game_sessions AS owner_game
+      WHERE owner_game.id = ${table.game_session_id}
+        AND owner_game.instructor_id = ${authUid}
+    )`,
+    withCheck: sql`EXISTS (
+      SELECT 1
+      FROM public.game_sessions AS owner_game
+      WHERE owner_game.id = ${table.game_session_id}
+        AND owner_game.instructor_id = ${authUid}
+    )`,
+  }),
+])
+
 export const instructorRelations = relations(instructors, ({ many }) => ({
   questionSets: many(questionSet)
 }))
