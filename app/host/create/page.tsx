@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useRef, useState } from "react";
+import { startTransition, useActionState, useRef, useState } from "react";
 import { createQuizAction } from "@/app/host/create/actions";
 import {
   IMAGE_EXTENSIONS,
@@ -110,6 +110,11 @@ export default function CreateQuiz() {
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    // Always submit manually. Letting React run the form action would reset
+    // the uncontrolled file inputs afterwards, so a server error would leave
+    // them empty while state still showed the selected images.
+    event.preventDefault();
+
     const nextErrors: FormErrors = { questions: {} };
     if (!title.trim()) {
       nextErrors.title = "Enter a quiz title.";
@@ -151,10 +156,19 @@ export default function CreateQuiz() {
       nextErrors.title ||
       Object.keys(nextErrors.questions).length > 0
     ) {
-      event.preventDefault();
-    } else {
-      setIsDirty(false);
+      return;
     }
+
+    // Send the images from state, not from the file inputs, so what is
+    // uploaded always matches what the form shows as selected.
+    const formData = new FormData(event.currentTarget);
+    formData.delete("image");
+    for (const question of questions) {
+      formData.append("image", question.image ?? new File([], ""));
+    }
+
+    setIsDirty(false);
+    startTransition(() => formAction(formData));
   }
 
   const selectedImageSize = questions.reduce(

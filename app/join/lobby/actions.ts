@@ -76,8 +76,17 @@ export async function leaveLobbyAction(): Promise<{ error?: string }> {
   const playerId = cookieStore.get(LOBBY_COOKIES.playerId)?.value;
   const channelToken = cookieStore.get(LOBBY_COOKIES.channelToken)?.value;
 
+  // Whatever state the lobby is in, a student who asks to leave should end up
+  // with no lobby cookies so the client can navigate away.
+  const clearLobbyCookies = () => {
+    cookieStore.delete(LOBBY_COOKIES.gameSessionId);
+    cookieStore.delete(LOBBY_COOKIES.playerId);
+    cookieStore.delete(LOBBY_COOKIES.channelToken);
+  };
+
   if (!isUuid(gameId) || !isUuid(playerId) || !isUuid(channelToken)) {
-    return { error: "Your lobby session has expired." };
+    clearLobbyCookies();
+    return {};
   }
 
   const [game] = await db
@@ -92,21 +101,19 @@ export async function leaveLobbyAction(): Promise<{ error?: string }> {
     )
     .limit(1);
 
-  if (!game) {
-    return { error: "This lobby has already been closed." };
+  // Only remove the player row while the game is still in the lobby; once it
+  // has closed or started, the row is no longer ours to change.
+  if (game) {
+    await db
+      .delete(gamePlayers)
+      .where(
+        and(
+          eq(gamePlayers.id, playerId),
+          eq(gamePlayers.game_session_id, gameId),
+        ),
+      );
   }
 
-  await db
-    .delete(gamePlayers)
-    .where(
-      and(
-        eq(gamePlayers.id, playerId),
-        eq(gamePlayers.game_session_id, gameId),
-      ),
-    );
-
-  cookieStore.delete(LOBBY_COOKIES.gameSessionId);
-  cookieStore.delete(LOBBY_COOKIES.playerId);
-  cookieStore.delete(LOBBY_COOKIES.channelToken);
+  clearLobbyCookies();
   return {};
 }
