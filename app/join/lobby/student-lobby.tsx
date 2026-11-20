@@ -12,6 +12,14 @@ import {
   announceLobbyChange,
   createLobbyChannel,
 } from "@/lib/game/lobby-realtime";
+import GamePinCard from "@/lib/components/game/GamePinCard";
+import PlayerList from "@/lib/components/game/PlayerList";
+import {
+  ArrowRightIcon,
+  BurstIcon,
+  TimerIcon,
+  UsersIcon,
+} from "@/lib/components/game/icons";
 
 type Props = {
   playerId: string;
@@ -126,93 +134,117 @@ export function StudentLobby({
   }
 
   if (isClosed) {
-    return (
-      <main className="mx-auto flex w-full max-w-xl flex-col items-center gap-4 px-4 py-12 text-center">
-        <span className="badge badge-outline">Lobby closed</span>
-        <h1 className="text-3xl font-bold">This lobby is no longer open</h1>
-        <Link href="/join" className="btn btn-primary">
-          Join another game
-        </Link>
-      </main>
-    );
+    return <LobbyClosed />;
   }
 
-  return (
-    <main className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-10 sm:py-12">
-      <header className="flex flex-col items-center gap-2 text-center">
-        <span className="badge badge-soft badge-success">You&apos;re in</span>
-        <h1 className="text-4xl font-bold">Waiting for the host</h1>
-        <p className="text-base-content/70">{connectionStatus}</p>
-      </header>
+  const isLive = connectionStatus === "Live updates connected";
 
-      <section className="card border border-primary/30 bg-base-100 shadow-md">
-        <div className="card-body items-center gap-2 text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest opacity-60">
-            Game PIN
-          </p>
-          <p className="font-mono text-5xl font-black tracking-[0.2em]">
-            {pin.slice(0, 3)} {pin.slice(3)}
-          </p>
-          <div className="mt-2 flex items-center gap-3 text-xl font-bold">
-            <span
-              className="size-4 rounded-full"
-              style={{
-                backgroundColor:
-                  players.find((player) => player.id === playerId)?.color ??
-                  "#7c3aed",
-              }}
-              aria-hidden="true"
-            />
-            {nickname}
+  return (
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8 sm:py-12">
+      <section
+        aria-labelledby="lobby-title"
+        className="card border border-base-300 bg-base-100 shadow-soft"
+      >
+        <div className="card-body gap-6 px-5 py-8 sm:px-10">
+          <header className="flex flex-col items-center gap-2 text-center">
+            <span className="flex size-18 items-center justify-center rounded-full bg-secondary text-primary">
+              <UsersIcon className="size-10" />
+            </span>
+            <span className="badge badge-soft badge-success mt-1 font-bold">You&apos;re in</span>
+            <h1
+              id="lobby-title"
+              className="relative text-3xl font-black tracking-tight sm:text-4xl"
+            >
+              <BurstIcon className="absolute top-0 -left-10 hidden size-7 -rotate-30 text-accent sm:block" />
+              Waiting for Players
+              <BurstIcon className="absolute top-0 -right-10 hidden size-7 rotate-30 text-accent sm:block" />
+            </h1>
+            <p className="text-base-content/70">
+              Share the game PIN with your friends and wait for everyone to join!
+            </p>
+            <p className="text-base-content/70">
+              Playing as <strong className="text-base-content">{nickname}</strong>
+            </p>
+          </header>
+
+          <div className="mx-auto w-full max-w-md">
+            <GamePinCard pin={pin} label="Game PIN" />
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-[1fr_auto_1fr]">
+            <PlayerList players={players} currentPlayerId={playerId} />
+            <div className="hidden w-px bg-base-300 md:block" aria-hidden="true" />
+            <aside
+              aria-labelledby="waiting-title"
+              className="flex flex-col items-center justify-center gap-3 rounded-box bg-base-200/70 p-6 text-center md:bg-transparent"
+            >
+              <span className="flex size-16 items-center justify-center rounded-full bg-secondary text-primary">
+                <TimerIcon className="size-9" />
+              </span>
+              <h2 id="waiting-title" className="text-xl font-extrabold">
+                Waiting to Start
+              </h2>
+              <p className="text-base-content/70">
+                The host will start the quiz when everyone is ready.
+              </p>
+              <p
+                className="inline-flex items-center gap-2 text-sm font-semibold text-base-content/70"
+                aria-live="polite"
+              >
+                <span
+                  className={`size-2.5 rounded-full ${isLive ? "bg-success" : "animate-pulse bg-warning"}`}
+                  aria-hidden="true"
+                />
+                {connectionStatus}
+              </p>
+            </aside>
           </div>
         </div>
       </section>
 
-      <section className="card border border-base-300 bg-base-100 shadow-sm">
-        <div className="card-body">
-          <h2 className="card-title">
-            Players <span className="badge badge-primary">{players.length}</span>
-          </h2>
-          <ul className="grid gap-3 sm:grid-cols-2">
-            {players.map((player) => (
-              <li
-                key={player.id}
-                className="flex items-center gap-3 rounded-box border border-base-300 bg-base-200 p-3"
-              >
-                <span
-                  className="size-4 shrink-0 rounded-full"
-                  style={{ backgroundColor: player.color }}
-                  aria-hidden="true"
-                />
-                <span className="truncate font-semibold">{player.nickname}</span>
-                {player.id === playerId && (
-                  <span className="ml-auto badge badge-sm badge-primary">You</span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
       {error && (
-        <p className="alert alert-error" role="alert">
+        <p className="alert alert-error alert-soft font-semibold" role="alert">
           {error}
         </p>
       )}
 
-      <div className="flex flex-col items-center gap-2">
-        <Link href="/play/group" className="btn btn-outline btn-primary">
+      <div className="flex flex-col items-center justify-center gap-2 sm:flex-row">
+        <Link href="/play/group" className="btn btn-outline btn-primary rounded-full">
           Preview game screens (prototype)
         </Link>
         <button
           type="button"
-          className="btn btn-ghost"
+          className="btn btn-ghost rounded-full"
           disabled={isLeaving}
           onClick={leaveLobby}
         >
+          {isLeaving && (
+            <span className="loading loading-spinner loading-sm" aria-hidden="true" />
+          )}
           {isLeaving ? "Leaving lobby…" : "Leave lobby"}
         </button>
       </div>
-    </main>
+    </div>
+  );
+}
+
+/** Shown when the host closes the lobby (here and by the server page). */
+export function LobbyClosed() {
+  return (
+    <div className="mx-auto flex w-full max-w-lg flex-col px-4 py-12">
+      <section className="card border border-base-300 bg-base-100 shadow-soft">
+        <div className="card-body items-center gap-3 px-5 py-10 text-center sm:px-10">
+          <span className="badge badge-outline font-bold">Lobby closed</span>
+          <h1 className="text-3xl font-black tracking-tight">This lobby is no longer open</h1>
+          <p className="text-base-content/70">
+            Ask your host for a new game PIN to keep playing.
+          </p>
+          <Link href="/join" className="btn btn-game btn-lg mt-2 rounded-full">
+            Join another game
+            <ArrowRightIcon />
+          </Link>
+        </div>
+      </section>
+    </div>
   );
 }

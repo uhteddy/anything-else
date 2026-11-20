@@ -1,5 +1,10 @@
 import { QuizForm } from "@/app/host/create/quiz-form";
+import GameShell from "@/lib/components/game/GameShell";
 
 export default function CreateQuiz() {
-  return <QuizForm mode="create" />;
+  return (
+    <GameShell>
+      <QuizForm mode="create" />
+    </GameShell>
+  );
 }

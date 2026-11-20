@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 
+// Styling only: deleting is still a prototype placeholder (arrives in v2).
 export function DeleteQuizButton({ quizTitle }: { quizTitle: string }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [confirmed, setConfirmed] = useState(false);
@@ -10,7 +11,7 @@ export function DeleteQuizButton({ quizTitle }: { quizTitle: string }) {
     <>
       <button
         type="button"
-        className="btn btn-ghost text-error"
+        className="btn btn-ghost btn-sm rounded-full text-error hover:bg-error/10"
         onClick={() => {
           setConfirmed(false);
           dialogRef.current?.showModal();
@@ -19,27 +20,37 @@ export function DeleteQuizButton({ quizTitle }: { quizTitle: string }) {
         Delete
       </button>
       <dialog ref={dialogRef} className="modal">
-        <div className="modal-box">
+        <div className="modal-box rounded-box border border-base-300 bg-base-100 p-6 text-center shadow-soft sm:p-8">
+          <span
+            className={`mx-auto flex size-14 items-center justify-center rounded-full text-2xl font-black ${
+              confirmed ? "bg-secondary text-primary" : "bg-error/10 text-error"
+            }`}
+            aria-hidden="true"
+          >
+            {confirmed ? "i" : "!"}
+          </span>
           {confirmed ? (
             <>
-              <h3 className="text-lg font-bold">Not deleted yet</h3>
-              <p className="py-4">Deleting quizzes arrives in prototype v2.</p>
+              <h3 className="mt-4 text-xl font-extrabold">Not deleted yet</h3>
+              <p className="py-3 text-base-content/70">Deleting quizzes arrives in prototype v2.</p>
             </>
           ) : (
             <>
-              <h3 className="text-lg font-bold">Delete &ldquo;{quizTitle}&rdquo;?</h3>
-              <p className="py-4">
+              <h3 className="mt-4 text-xl font-extrabold wrap-break-word">
+                Delete &ldquo;{quizTitle}&rdquo;?
+              </h3>
+              <p className="py-3 text-base-content/70">
                 This removes the quiz and all of its questions. This can&apos;t be undone.
               </p>
             </>
           )}
-          <div className="modal-action">
-            <form method="dialog" className="flex gap-2">
-              <button className="btn btn-ghost">{confirmed ? "Close" : "Cancel"}</button>
+          <div className="modal-action justify-center">
+            <form method="dialog" className="flex flex-wrap justify-center gap-2">
+              <button className="btn btn-ghost rounded-full">{confirmed ? "Close" : "Cancel"}</button>
               {!confirmed && (
                 <button
                   type="button"
-                  className="btn btn-error"
+                  className="btn btn-error rounded-full"
                   onClick={() => setConfirmed(true)}
                 >
                   Delete quiz

@@ -1,12 +1,12 @@
 import { and, asc, eq } from "drizzle-orm";
 import { cookies } from "next/headers";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { db } from "@/db";
 import { gamePlayers, gameSessions } from "@/db/schema";
 import { isUuid, LOBBY_COOKIES, type LobbyPlayer } from "@/lib/game/lobby";
-import { StudentLobby } from "@/app/join/lobby/student-lobby";
+import { LobbyClosed, StudentLobby } from "@/app/join/lobby/student-lobby";
+import GameShell from "@/lib/components/game/GameShell";
 
 export const instant = false;
 
@@ -39,13 +39,9 @@ export default async function WaitingLobby() {
 
   if (!game) {
     return (
-      <main className="mx-auto flex w-full max-w-xl flex-col items-center gap-4 px-4 py-12 text-center">
-        <span className="badge badge-outline">Lobby closed</span>
-        <h1 className="text-3xl font-bold">This lobby is no longer open</h1>
-        <Link href="/join" className="btn btn-primary">
-          Join another game
-        </Link>
-      </main>
+      <GameShell>
+        <LobbyClosed />
+      </GameShell>
     );
   }
 
@@ -78,12 +74,14 @@ export default async function WaitingLobby() {
     .orderBy(asc(gamePlayers.nickname), asc(gamePlayers.created_at));
 
   return (
-    <StudentLobby
-      playerId={player.id}
-      channelToken={game.channelToken}
-      pin={game.pin}
-      nickname={player.nickname}
-      initialPlayers={players}
-    />
+    <GameShell>
+      <StudentLobby
+        playerId={player.id}
+        channelToken={game.channelToken}
+        pin={game.pin}
+        nickname={player.nickname}
+        initialPlayers={players}
+      />
+    </GameShell>
   );
 }
