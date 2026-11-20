@@ -14,6 +14,16 @@ import {
   MAX_TOTAL_IMAGE_SIZE_BYTES,
   MIN_TIME_LIMIT_SECONDS,
 } from "@/lib/quiz-constants";
+import {
+  ArrowDownIcon,
+  ArrowLeftIcon,
+  ArrowUpIcon,
+  BookIcon,
+  ImageIcon,
+  PlusIcon,
+  TimerIcon,
+  TrashIcon,
+} from "@/lib/components/game/icons";
 
 type QuizQuestion = {
   id: string;
@@ -220,20 +230,32 @@ export function QuizForm({ mode, initialTitle = "", initialQuestions }: QuizForm
   );
 
   return (
-    <main className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-4 py-8 sm:py-12">
-      <header className="flex flex-col gap-3">
-        <Link href="/host" className="link link-hover w-fit text-sm">
-          ← Back to Host a Game
-        </Link>
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-wide text-primary">
-            Quiz builder
-          </p>
-          <h1 className="mt-1 text-4xl font-bold">{isEdit ? "Edit quiz" : "Create a quiz"}</h1>
-          <p className="mt-2 max-w-2xl text-base-content/70">
-            Write open-response questions for students to answer together.
-            Each question needs a reference answer for grading.
-          </p>
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8 sm:py-12">
+      <Link
+        href="/host"
+        className="inline-flex w-fit items-center gap-2 rounded-field font-bold text-base-content/80 transition-colors hover:text-primary focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-primary/40"
+      >
+        <ArrowLeftIcon />
+        Back to Host a Game
+      </Link>
+
+      <header className={CARD_CLASS}>
+        <div className="card-body flex-row flex-wrap items-center gap-4 px-5 py-6 sm:px-8">
+          <span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-secondary text-primary">
+            <BookIcon className="size-7" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-bold tracking-wide text-primary uppercase">
+              Quiz builder
+            </p>
+            <h1 className="text-3xl font-black tracking-tight sm:text-4xl">
+              {isEdit ? "Edit quiz" : "Create a quiz"}
+            </h1>
+            <p className="mt-1 max-w-2xl text-base-content/70">
+              Write open-response questions for students to answer together.
+              Each question needs a reference answer for grading.
+            </p>
+          </div>
         </div>
       </header>
 
@@ -243,23 +265,23 @@ export function QuizForm({ mode, initialTitle = "", initialQuestions }: QuizForm
         noValidate
         className="flex flex-col gap-6"
       >
-        <section className="card border border-base-300 bg-base-100 shadow-sm">
-          <div className="card-body gap-4">
+        <section className={CARD_CLASS}>
+          <div className="card-body gap-4 px-5 py-6 sm:px-8">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="card-title">Quiz details</h2>
-              <span className="badge badge-outline">
+              <h2 className="text-xl font-extrabold">Quiz details</h2>
+              <span className="badge badge-soft badge-primary font-bold">
                 {questions.length} / {MAX_QUESTIONS} questions
               </span>
             </div>
 
             <fieldset className="fieldset">
-              <label htmlFor="quiz-title" className="fieldset-legend">
+              <label htmlFor="quiz-title" className={LEGEND_CLASS}>
                 Quiz title
               </label>
               <input
                 id="quiz-title"
                 name="title"
-                className={`input input-bordered w-full ${errors.title ? "input-error" : ""}`}
+                className={`input input-lg w-full font-semibold ${fieldClass(Boolean(errors.title))}`}
                 value={title}
                 onChange={(event) => {
                   setTitle(event.target.value);
@@ -271,7 +293,7 @@ export function QuizForm({ mode, initialTitle = "", initialQuestions }: QuizForm
                 aria-describedby={errors.title ? "quiz-title-error" : undefined}
               />
               {errors.title && (
-                <p id="quiz-title-error" className="label text-error" role="alert">
+                <p id="quiz-title-error" className={ERROR_TEXT_CLASS} role="alert">
                   {errors.title}
                 </p>
               )}
@@ -279,60 +301,78 @@ export function QuizForm({ mode, initialTitle = "", initialQuestions }: QuizForm
           </div>
         </section>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-5">
           {questions.map((question, index) => {
             const questionErrors = errors.questions[question.id] ?? {};
+            const hasErrors = Object.keys(questionErrors).length > 0;
 
             return (
               <section
                 key={question.id}
-                className="card border border-base-300 bg-base-100 shadow-sm"
+                aria-labelledby={`${question.id}-heading`}
+                className={`card border-2 bg-base-100 shadow-soft ${
+                  hasErrors ? "border-error/60" : "border-base-300"
+                }`}
               >
-                <div className="card-body gap-5">
+                <div className="card-body gap-5 px-5 py-6 sm:px-8">
                   <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <span className="badge badge-primary badge-lg">{index + 1}</span>
-                      <h2 className="card-title text-xl">Question {index + 1}</h2>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span
+                        className="flex size-9 items-center justify-center rounded-full bg-primary font-black text-primary-content"
+                        aria-hidden="true"
+                      >
+                        {index + 1}
+                      </span>
+                      <h2 id={`${question.id}-heading`} className="text-xl font-extrabold">
+                        Question {index + 1}
+                      </h2>
+                      {/* Placeholder for the future Written Answer / Multiple Choice choice. */}
+                      <span className="rounded-full bg-secondary px-3 py-1 text-xs font-bold text-secondary-content">
+                        Written answer
+                      </span>
                     </div>
                     <div className="flex gap-1">
                       <button
                         type="button"
-                        className="btn btn-ghost btn-sm"
+                        className="btn btn-ghost btn-sm btn-square rounded-full hover:bg-secondary hover:text-primary"
                         onClick={() => moveQuestion(index, -1)}
                         disabled={index === 0}
                         aria-label={`Move question ${index + 1} up`}
+                        title="Move up"
                       >
-                        ↑
+                        <ArrowUpIcon />
                       </button>
                       <button
                         type="button"
-                        className="btn btn-ghost btn-sm"
+                        className="btn btn-ghost btn-sm btn-square rounded-full hover:bg-secondary hover:text-primary"
                         onClick={() => moveQuestion(index, 1)}
                         disabled={index === questions.length - 1}
                         aria-label={`Move question ${index + 1} down`}
+                        title="Move down"
                       >
-                        ↓
+                        <ArrowDownIcon />
                       </button>
                       <button
                         type="button"
-                        className="btn btn-ghost btn-sm text-error"
+                        className="btn btn-ghost btn-sm btn-square rounded-full text-error hover:bg-error/10"
                         onClick={() => removeQuestion(question.id)}
                         disabled={questions.length === 1}
                         aria-label={`Remove question ${index + 1}`}
+                        title="Remove"
                       >
-                        Remove
+                        <TrashIcon />
                       </button>
                     </div>
                   </div>
 
                   <fieldset className="fieldset">
-                    <label htmlFor={`${question.id}-prompt`} className="fieldset-legend">
+                    <label htmlFor={`${question.id}-prompt`} className={LEGEND_CLASS}>
                       Question prompt
                     </label>
                     <textarea
                       id={`${question.id}-prompt`}
                       name="prompt"
-                      className={`textarea textarea-bordered min-h-28 w-full ${questionErrors.prompt ? "textarea-error" : ""}`}
+                      className={`textarea min-h-28 w-full text-base ${fieldClass(Boolean(questionErrors.prompt))}`}
                       value={question.prompt}
                       onChange={(event) =>
                         updateQuestion(question.id, { prompt: event.target.value })
@@ -347,7 +387,7 @@ export function QuizForm({ mode, initialTitle = "", initialQuestions }: QuizForm
                     {questionErrors.prompt && (
                       <p
                         id={`${question.id}-prompt-error`}
-                        className="label text-error"
+                        className={ERROR_TEXT_CLASS}
                         role="alert"
                       >
                         {questionErrors.prompt}
@@ -356,15 +396,19 @@ export function QuizForm({ mode, initialTitle = "", initialQuestions }: QuizForm
                   </fieldset>
 
                   <fieldset className="fieldset">
-                    <label htmlFor={`${question.id}-image`} className="fieldset-legend">
-                      Image prompt <span className="font-normal opacity-60">Optional</span>
+                    <label htmlFor={`${question.id}-image`} className={LEGEND_CLASS}>
+                      <ImageIcon className="size-5 text-primary" />
+                      Image prompt{" "}
+                      <span className="font-normal text-base-content/60">Optional</span>
                     </label>
                     <input
                       id={`${question.id}-image`}
                       type="file"
                       name="image"
                       accept={Object.keys(IMAGE_EXTENSIONS).join(",")}
-                      className="file-input file-input-bordered w-full"
+                      className={`file-input w-full file:bg-secondary file:font-bold file:text-secondary-content ${fieldClass(
+                        Boolean(questionErrors.image || question.imageError),
+                      )}`}
                       onChange={(event) =>
                         handleImageChange(question.id, event.target.files?.[0])
                       }
@@ -378,24 +422,28 @@ export function QuizForm({ mode, initialTitle = "", initialQuestions }: QuizForm
                     {questionErrors.image || question.imageError ? (
                       <p
                         id={`${question.id}-image-error`}
-                        className="label text-error"
+                        className={ERROR_TEXT_CLASS}
                         role="alert"
                       >
                         {questionErrors.image || question.imageError}
                       </p>
                     ) : (
-                      <p id={`${question.id}-image-help`} className="label">
+                      <p id={`${question.id}-image-help`} className={HELP_TEXT_CLASS}>
                         JPEG, PNG, WebP, or GIF; no more than 25 MB total across this quiz.
                       </p>
                     )}
                     {question.image ? (
-                      <p className="text-sm text-base-content/70">
-                        Selected: {question.image.name}
+                      <p className={FILE_NAME_CLASS}>
+                        <ImageIcon className="size-4 shrink-0" />
+                        <span className="truncate">Selected: {question.image.name}</span>
                       </p>
                     ) : (
                       question.existingImageName && (
-                        <p className="text-sm text-base-content/70">
-                          Current image: {question.existingImageName}
+                        <p className={FILE_NAME_CLASS}>
+                          <ImageIcon className="size-4 shrink-0" />
+                          <span className="truncate">
+                            Current image: {question.existingImageName}
+                          </span>
                         </p>
                       )
                     )}
@@ -404,14 +452,16 @@ export function QuizForm({ mode, initialTitle = "", initialQuestions }: QuizForm
                   <fieldset className="fieldset">
                     <label
                       htmlFor={`${question.id}-answer`}
-                      className="fieldset-legend"
+                      className={LEGEND_CLASS}
                     >
                       Reference answer
                     </label>
                     <textarea
                       id={`${question.id}-answer`}
                       name="referenceAnswer"
-                      className={`textarea textarea-bordered min-h-24 w-full ${questionErrors.referenceAnswer ? "textarea-error" : ""}`}
+                      className={`textarea min-h-24 w-full text-base ${fieldClass(
+                        Boolean(questionErrors.referenceAnswer),
+                      )}`}
                       value={question.referenceAnswer}
                       onChange={(event) =>
                         updateQuestion(question.id, {
@@ -430,7 +480,7 @@ export function QuizForm({ mode, initialTitle = "", initialQuestions }: QuizForm
                     {questionErrors.referenceAnswer && (
                       <p
                         id={`${question.id}-answer-error`}
-                        className="label text-error"
+                        className={ERROR_TEXT_CLASS}
                         role="alert"
                       >
                         {questionErrors.referenceAnswer}
@@ -441,11 +491,12 @@ export function QuizForm({ mode, initialTitle = "", initialQuestions }: QuizForm
                   <fieldset className="fieldset max-w-xs">
                     <label
                       htmlFor={`${question.id}-time-limit`}
-                      className="fieldset-legend"
+                      className={LEGEND_CLASS}
                     >
+                      <TimerIcon className="size-5 text-primary" />
                       Time limit
                     </label>
-                    <div className="join">
+                    <div className="join w-full">
                       <input
                         id={`${question.id}-time-limit`}
                         name="timeLimitSeconds"
@@ -453,7 +504,9 @@ export function QuizForm({ mode, initialTitle = "", initialQuestions }: QuizForm
                         min={MIN_TIME_LIMIT_SECONDS}
                         max={MAX_TIME_LIMIT_SECONDS}
                         step={1}
-                        className={`input input-bordered join-item w-full ${questionErrors.timeLimitSeconds ? "input-error" : ""}`}
+                        className={`input join-item w-full font-semibold ${fieldClass(
+                          Boolean(questionErrors.timeLimitSeconds),
+                        )}`}
                         value={question.timeLimitSeconds}
                         onChange={(event) =>
                           updateQuestion(question.id, {
@@ -467,20 +520,20 @@ export function QuizForm({ mode, initialTitle = "", initialQuestions }: QuizForm
                             : `${question.id}-time-limit-help`
                         }
                       />
-                      <span className="join-item flex items-center border border-base-300 bg-base-200 px-4">
+                      <span className="join-item flex items-center rounded-r-field border-2 border-l-0 border-base-300 bg-secondary px-4 font-bold text-secondary-content">
                         seconds
                       </span>
                     </div>
                     {questionErrors.timeLimitSeconds ? (
                       <p
                         id={`${question.id}-time-limit-error`}
-                        className="label text-error"
+                        className={ERROR_TEXT_CLASS}
                         role="alert"
                       >
                         {questionErrors.timeLimitSeconds}
                       </p>
                     ) : (
-                      <p id={`${question.id}-time-limit-help`} className="label">
+                      <p id={`${question.id}-time-limit-help`} className={HELP_TEXT_CLASS}>
                         Choose between {MIN_TIME_LIMIT_SECONDS} seconds and{" "}
                         {MAX_TIME_LIMIT_SECONDS / 60} minutes.
                       </p>
@@ -494,11 +547,12 @@ export function QuizForm({ mode, initialTitle = "", initialQuestions }: QuizForm
 
         <button
           type="button"
-          className="btn btn-outline"
+          className="btn btn-block h-14 rounded-box border-2 border-dashed border-primary/40 bg-base-100/70 text-base font-bold text-primary shadow-none hover:border-primary hover:bg-secondary"
           onClick={addQuestion}
           disabled={questions.length >= MAX_QUESTIONS}
         >
-          + Add question
+          <PlusIcon />
+          Add question
         </button>
 
         <p className="text-sm text-base-content/70" aria-live="polite">
@@ -506,19 +560,19 @@ export function QuizForm({ mode, initialTitle = "", initialQuestions }: QuizForm
         </p>
 
         {errors.form && (
-          <p className="alert alert-error" role="alert">
+          <p className="alert alert-error alert-soft font-semibold" role="alert">
             {errors.form}
           </p>
         )}
 
         {showEditNotice && (
-          <p className="alert alert-info" role="status">
+          <p className="alert alert-info alert-soft font-semibold" role="status">
             Your changes look good. Saving edits arrives in prototype v2.
           </p>
         )}
 
         {!isDirty && !isPending && saveState.error && (
-          <p className="alert alert-error" role="alert">
+          <p className="alert alert-error alert-soft font-semibold" role="alert">
             {saveState.error}
             {saveState.error.startsWith("Your session") && (
               <>
@@ -535,14 +589,37 @@ export function QuizForm({ mode, initialTitle = "", initialQuestions }: QuizForm
         )}
 
         <div className="flex flex-col-reverse justify-end gap-3 sm:flex-row">
-          <Link href="/host" className="btn btn-ghost">
+          <Link href="/host" className="btn btn-ghost btn-lg rounded-full">
             Cancel
           </Link>
-          <button type="submit" className="btn btn-primary" disabled={isPending}>
+          <button
+            type="submit"
+            className="btn btn-game btn-lg rounded-full px-8"
+            disabled={isPending}
+          >
+            {isPending && (
+              <span className="loading loading-spinner loading-sm" aria-hidden="true" />
+            )}
             {isPending ? "Saving quiz..." : isEdit ? "Save changes" : "Save quiz"}
           </button>
         </div>
       </form>
-    </main>
+    </div>
   );
+}
+
+const CARD_CLASS = "card border border-base-300 bg-base-100 shadow-soft";
+const LEGEND_CLASS = "fieldset-legend flex items-center gap-2 text-base font-bold";
+const ERROR_TEXT_CLASS = "text-sm font-semibold text-error";
+const HELP_TEXT_CLASS = "text-sm text-base-content/60";
+const FILE_NAME_CLASS =
+  "flex items-center gap-2 rounded-field bg-secondary/60 px-3 py-2 text-sm font-semibold text-secondary-content";
+
+/** Thick lavender border that turns purple on focus, or red when the field has an error. */
+function fieldClass(hasError: boolean) {
+  return `rounded-field border-2 focus:outline-none focus:ring-4 ${
+    hasError
+      ? "border-error focus:border-error focus:ring-error/15"
+      : "border-base-300 focus:border-primary focus:ring-primary/15"
+  }`;
 }

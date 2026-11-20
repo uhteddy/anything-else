@@ -1,12 +1,15 @@
-import { and, count, eq } from "drizzle-orm";
+import { asc, count, eq, max, min } from "drizzle-orm";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { db } from "@/db";
 import { questionSet, questions } from "@/db/schema";
 import { CreateLobbyForm } from "@/app/host/start/create-lobby-form";
+import type { HostQuizOption } from "@/app/host/quiz-format";
 import { isUuid } from "@/lib/game/lobby";
 import { getClaims } from "@/lib/auth";
+import GameShell from "@/lib/components/game/GameShell";
+import { ArrowLeftIcon } from "@/lib/components/game/icons";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -31,57 +34,38 @@ export default async function StartGame({
     redirect("/host");
   }
 
-  const [quiz] = await db
+  // Load all of this instructor's quizzes (for the dropdown) in one query and
+  // preselect the requested one. Same ownership filter as before.
+  const quizzes: HostQuizOption[] = await db
     .select({
       id: questionSet.id,
       title: questionSet.title,
       questionCount: count(questions.id),
+      minTimeSeconds: min(questions.time_limit_seconds),
+      maxTimeSeconds: max(questions.time_limit_seconds),
     })
     .from(questionSet)
     .leftJoin(questions, eq(questions.question_set_id, questionSet.id))
-    .where(and(eq(questionSet.id, quizId), eq(questionSet.instructor_id, instructorId)))
+    .where(eq(questionSet.instructor_id, instructorId))
     .groupBy(questionSet.id, questionSet.title)
-    .limit(1);
+    .orderBy(asc(questionSet.title));
 
-  if (!quiz) {
+  if (!quizzes.some((quiz) => quiz.id === quizId)) {
     redirect("/host");
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-12">
-      <header className="flex flex-col gap-3">
-        <Link href="/host" className="link link-hover w-fit text-sm">
-          ← Back to Host a Game
+    <GameShell>
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 px-4 py-8 sm:py-12">
+        <Link
+          href="/host"
+          className="inline-flex w-fit items-center gap-2 rounded-field font-bold text-base-content/80 transition-colors hover:text-primary focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-primary/40"
+        >
+          <ArrowLeftIcon />
+          Back to Host a Game
         </Link>
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-wide text-primary">
-            Game setup
-          </p>
-          <h1 className="mt-1 text-4xl font-bold">Open a lobby</h1>
-          <p className="mt-2 text-base-content/70">
-            Students can join with the game PIN. You can close the lobby when
-            you&apos;re ready.
-          </p>
-        </div>
-      </header>
-
-      <section className="card border border-base-300 bg-base-100 shadow-sm">
-        <div className="card-body">
-          <h2 className="card-title">{quiz.title}</h2>
-          <p className="text-base-content/70">
-            {quiz.questionCount}{" "}
-            {quiz.questionCount === 1 ? "question" : "questions"}
-          </p>
-        </div>
-      </section>
-
-      {quiz.questionCount === 0 ? (
-        <p className="alert alert-warning">
-          This quiz has no questions yet. Add a question before opening a lobby.
-        </p>
-      ) : (
-        <CreateLobbyForm quizId={quiz.id} />
-      )}
-    </main>
+        <CreateLobbyForm quizzes={quizzes} initialQuizId={quizId} />
+      </div>
+    </GameShell>
   );
 }

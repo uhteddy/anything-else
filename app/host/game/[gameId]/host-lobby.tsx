@@ -12,6 +12,14 @@ import {
   announceLobbyChange,
   createLobbyChannel,
 } from "@/lib/game/lobby-realtime";
+import GamePinCard from "@/lib/components/game/GamePinCard";
+import PlayerList from "@/lib/components/game/PlayerList";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  CrownIcon,
+  UsersIcon,
+} from "@/lib/components/game/icons";
 
 type Props = {
   gameId: string;
@@ -115,94 +123,104 @@ export function HostLobby({
     router.push("/host");
   }
 
+  const isLive = connectionStatus === "Live updates connected";
+
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-10 sm:py-12">
-      <header className="flex flex-col gap-3 text-center">
-        <Link href="/host" className="link link-hover mx-auto w-fit text-sm">
-          ← Back to Host a Game
-        </Link>
-        <p className="text-sm font-semibold uppercase tracking-wide text-primary">
-          Waiting room
-        </p>
-        <h1 className="text-4xl font-bold">{quizTitle}</h1>
-        <p className="text-base-content/70">{connectionStatus}</p>
-      </header>
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8 sm:py-12">
+      <Link
+        href="/host"
+        className="inline-flex w-fit items-center gap-2 rounded-field font-bold text-base-content/80 transition-colors hover:text-primary focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-primary/40"
+      >
+        <ArrowLeftIcon />
+        Back to Host a Game
+      </Link>
 
-      <section className="card border border-primary/30 bg-base-100 shadow-md">
-        <div className="card-body items-center gap-2 text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest opacity-60">
-            Students join at /join with this PIN
-          </p>
-          <p className="font-mono text-5xl font-black tracking-[0.2em] sm:text-6xl">
-            {pin.slice(0, 3)} {pin.slice(3)}
-          </p>
-          <p className="text-base-content/70">
-            Keep this page open while students join.
-          </p>
-        </div>
-      </section>
-
-      <section className="card border border-base-300 bg-base-100 shadow-sm">
-        <div className="card-body">
-          <h2 className="card-title">
-            Players <span className="badge badge-primary">{players.length}</span>
-          </h2>
-          {players.length === 0 ? (
-            <p className="py-4 text-base-content/70">
-              Waiting for students to join…
+      <section
+        aria-labelledby="host-lobby-title"
+        className="card border border-base-300 bg-base-100 shadow-soft"
+      >
+        <div className="card-body gap-6 px-5 py-8 sm:px-10">
+          <header className="flex flex-col items-center gap-2 text-center">
+            <span className="flex size-18 items-center justify-center rounded-full bg-secondary text-accent">
+              <CrownIcon className="size-10" />
+            </span>
+            <p className="mt-1 text-sm font-bold tracking-wide text-primary uppercase">
+              Waiting room
             </p>
-          ) : (
-            <ul className="grid gap-3 sm:grid-cols-2">
-              {players.map((player) => (
-                <li
-                  key={player.id}
-                  className="flex items-center gap-3 rounded-box border border-base-300 bg-base-200 p-3"
-                >
-                  <span
-                    className="size-4 shrink-0 rounded-full"
-                    style={{ backgroundColor: player.color }}
-                    aria-hidden="true"
-                  />
-                  <span className="truncate font-semibold">{player.nickname}</span>
-                </li>
-              ))}
-            </ul>
-          )}
+            <h1
+              id="host-lobby-title"
+              className="text-3xl font-black tracking-tight wrap-break-word sm:text-4xl"
+            >
+              {quizTitle}
+            </h1>
+            <p
+              className="inline-flex items-center gap-2 text-sm font-semibold text-base-content/70"
+              aria-live="polite"
+            >
+              <span
+                className={`size-2.5 rounded-full ${isLive ? "bg-success" : "animate-pulse bg-warning"}`}
+                aria-hidden="true"
+              />
+              {connectionStatus}
+            </p>
+          </header>
+
+          <div className="mx-auto flex w-full max-w-xl flex-col gap-1">
+            <GamePinCard pin={pin} label="Students join at /join with this PIN" size="lg" />
+            <p className="text-center text-base-content/70">
+              Keep this page open while students join.
+            </p>
+          </div>
+
+          <PlayerList players={players} emptyMessage="Waiting for students to join…" />
         </div>
       </section>
 
       {error && (
-        <p className="alert alert-error" role="alert">
+        <p className="alert alert-error alert-soft font-semibold" role="alert">
           {error}
         </p>
       )}
 
-      <section className="card border border-base-300 bg-base-100 shadow-sm">
-        <div className="card-body gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <fieldset className="fieldset">
-            <label htmlFor="group-size" className="fieldset-legend">
-              Students per group
-            </label>
-            <select
-              id="group-size"
-              className="select select-bordered w-40"
-              value={groupSize}
-              onChange={(event) => setGroupSize(Number(event.target.value))}
-            >
-              {[2, 3, 4, 5, 6].map((size) => (
-                <option key={size} value={size}>
-                  {size} students
-                </option>
-              ))}
-            </select>
-            <p className="label">
-              {players.length > 0
-                ? `About ${Math.ceil(players.length / groupSize)} groups for ${players.length} students.`
-                : "Groups are formed once students have joined."}
-            </p>
-          </fieldset>
-          <Link href={`/host/game/${gameId}/groups`} className="btn btn-primary">
-            Assign groups →
+      <section
+        aria-labelledby="groups-title"
+        className="card border border-base-300 bg-base-100 shadow-soft"
+      >
+        <div className="card-body gap-4 px-5 py-6 sm:flex-row sm:items-end sm:justify-between sm:px-10">
+          <div className="flex flex-col gap-1">
+            <h2 id="groups-title" className="text-lg font-extrabold">
+              Groups
+            </h2>
+            <fieldset className="fieldset">
+              <label
+                htmlFor="group-size"
+                className="fieldset-legend flex items-center gap-2 text-base font-bold"
+              >
+                <UsersIcon className="size-5 text-primary" />
+                Students per group
+              </label>
+              <select
+                id="group-size"
+                className="select w-44 rounded-field border-2 border-base-300 font-semibold focus:border-primary"
+                value={groupSize}
+                onChange={(event) => setGroupSize(Number(event.target.value))}
+              >
+                {[2, 3, 4, 5, 6].map((size) => (
+                  <option key={size} value={size}>
+                    {size} students
+                  </option>
+                ))}
+              </select>
+              <p className="text-sm text-base-content/60">
+                {players.length > 0
+                  ? `About ${Math.ceil(players.length / groupSize)} groups for ${players.length} students.`
+                  : "Groups are formed once students have joined."}
+              </p>
+            </fieldset>
+          </div>
+          <Link href={`/host/game/${gameId}/groups`} className="btn btn-game btn-lg rounded-full">
+            Assign groups
+            <ArrowRightIcon />
           </Link>
         </div>
       </section>
@@ -210,13 +228,16 @@ export function HostLobby({
       <div className="flex justify-end">
         <button
           type="button"
-          className="btn btn-outline btn-error"
+          className="btn btn-outline btn-error rounded-full"
           disabled={isClosing}
           onClick={closeLobby}
         >
+          {isClosing && (
+            <span className="loading loading-spinner loading-sm" aria-hidden="true" />
+          )}
           {isClosing ? "Closing lobby…" : "Close lobby"}
         </button>
       </div>
-    </main>
+    </div>
   );
 }

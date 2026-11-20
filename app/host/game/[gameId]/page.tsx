@@ -6,6 +6,7 @@ import { gamePlayers, gameSessions, questionSet } from "@/db/schema";
 import { isUuid, type LobbyPlayer } from "@/lib/game/lobby";
 import { getClaims } from "@/lib/auth";
 import { HostLobby } from "@/app/host/game/[gameId]/host-lobby";
+import GameShell from "@/lib/components/game/GameShell";
 
 type Params = Promise<{ gameId: string }>;
 
@@ -61,12 +62,14 @@ export default async function HostGameLobby({ params }: { params: Params }) {
     .orderBy(asc(gamePlayers.nickname), asc(gamePlayers.created_at));
 
   return (
-    <HostLobby
-      gameId={game.id}
-      pin={game.pin}
-      channelToken={game.channelToken}
-      quizTitle={game.title}
-      initialPlayers={players}
-    />
+    <GameShell>
+      <HostLobby
+        gameId={game.id}
+        pin={game.pin}
+        channelToken={game.channelToken}
+        quizTitle={game.title}
+        initialPlayers={players}
+      />
+    </GameShell>
   );
 }

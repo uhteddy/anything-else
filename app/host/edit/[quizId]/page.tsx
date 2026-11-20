@@ -6,6 +6,7 @@ import { questionSet, questions } from "@/db/schema";
 import { QuizForm } from "@/app/host/create/quiz-form";
 import { getClaims } from "@/lib/auth";
 import { isUuid } from "@/lib/game/lobby";
+import GameShell from "@/lib/components/game/GameShell";
 
 type Params = Promise<{ quizId: string }>;
 
@@ -47,15 +48,17 @@ export default async function EditQuiz({ params }: { params: Params }) {
     .orderBy(asc(questions.position));
 
   return (
-    <QuizForm
-      mode="edit"
-      initialTitle={quiz.title}
-      initialQuestions={quizQuestions.map((question) => ({
-        prompt: question.prompt ?? "",
-        referenceAnswer: question.referenceAnswer,
-        timeLimitSeconds: question.timeLimitSeconds,
-        existingImageName: question.imagePath?.split("/").pop() ?? "",
-      }))}
-    />
+    <GameShell>
+      <QuizForm
+        mode="edit"
+        initialTitle={quiz.title}
+        initialQuestions={quizQuestions.map((question) => ({
+          prompt: question.prompt ?? "",
+          referenceAnswer: question.referenceAnswer,
+          timeLimitSeconds: question.timeLimitSeconds,
+          existingImageName: question.imagePath?.split("/").pop() ?? "",
+        }))}
+      />
+    </GameShell>
   );
 }
